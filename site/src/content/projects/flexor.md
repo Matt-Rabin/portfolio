@@ -30,19 +30,13 @@ has_appendix: false
 
 This project, completed for an open-ended biomechanics prompt, explored how prosthetic fingers could be made affordable and customizable using modular, 3D-printed parts. The goal was to design a cable-driven prosthetic that anyone could fabricate at home for under one dollar per finger. Inspired by tendon-driven mechanisms, I modeled, printed, and tested multiple iterations to improve cost, comfort, and range of motion.
 
----
-
 ## Concept
 
 The concept began with a tendon-driven finger inspired by biomechanical cable systems. I sketched, modeled, and printed early prototypes to test motion, tension routing, and ergonomics using off-the-shelf parts and basic 3D printing.
 
----
-
 ## Result
 
 The final prototype introduced improved joint geometry, stronger materials, and a simplified cable path. Using nylon string and rubber band tensioning, the prosthetic achieved a natural bending motion that closely mirrored a real finger. The full assembly cost under one dollar per unit to fabricate. Testing confirmed reliable actuation and easy repair, validating the modular approach for low-cost accessibility.
-
----
 
 ## Appendix
 

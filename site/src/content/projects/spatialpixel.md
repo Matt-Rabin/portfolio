@@ -23,6 +23,7 @@ appendix_images: [image 45@2x.webp, HandOCRview@2x.webp]
 # Delete sections that don't apply
 # has_appendix controls whether the Technical Appendix tab shows
 has_appendix: true
+video_embed: "https://www.youtube.com/embed/bcZ-I_aZp5M?autoplay=1&mute=1&loop=1&playlist=bcZ-I_aZp5M"
 
 ---
 
@@ -30,20 +31,14 @@ has_appendix: true
 
 This project was a collaboration with Spatial Pixel, exploring how AI and spatial computing could be applied in creative workspaces. Our team was tasked with identifying the “killer use cases” for their prototype system, Procession; a projection-based interface that responds to voice, gesture, and real-world context. I focused on user testing, design visualization, and proposing technical improvements to the interface.
 
----
-
 ## Concept
 
 Our goal was to understand how people might use Procession in real work sessions. We expected users to struggle with how to engage with its functionality, but they actually struggled with what to prompt. Even informed participants used outside tools to decide what needed to be added to the canvas, rather than staying within the projected workspace.
-
----
 
 ## Results
 
 User testing and iteration led to a redesigned interface that made Procession feel more like a tool and less like a demo. We introduced a Spatial Library, a set of pre-built templates for brainstorming, mapping, and collaboration. The library let users share complete, ready-to-use modules, giving regular users a clear starting point and making the system easier to approach.
 To help users decide what to create rather than how to prompt, we mocked up a visualization feature. These transformed sketches and text into visual scenes instantly, helping teams explore variations, summarize ideas, and make decisions faster together.
-
----
 
 ## Appendix
 

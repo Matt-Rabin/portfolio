@@ -30,19 +30,14 @@ has_appendix: false
 
 A semester-long team project to design a complete motorcycle engine from first principles. Our team developed a flat-four internal combustion engine focused on balance, efficiency, and rider comfort.The flat-four layout was chosen to reduce vibration and off-plane forces while maintaining mechanical simplicity. The final deliverable included a fully detailed CAD assembly, analysis, and technical documentation.
 
----
-
 ## Mechanical Design
 
 I served as the team’s Design Specialist, focusing on the piston and crankshaft assemblies. I designed and detailed these components in CAD, resolving clearances, tolerances, and motion constraints across the full engine cycle.
 Critical parts were validated using finite element analysis. Early stress failures in the piston head led to a redesigned geometry that reduced weight and improved safety factors under load.
 
----
-
 ## Result
-The final deliverable was a comprehensive technical report supported by a fully detailed CAD engine assembly with integrated analysis. While most of my work focused on the crankshaft, I also contributed significantly to the case and valvetrain. The project emphasized designing with analysis from the outset, using early FEA to guide tradeoffs between strength, weight, and manufacturability. Working within a large team highlighted how tightly coupled mechanical decisions are in complex systems, where changes to one component propagate throughout the design.
 
----
+The final deliverable was a comprehensive technical report supported by a fully detailed CAD engine assembly with integrated analysis. While most of my work focused on the crankshaft, I also contributed significantly to the case and valvetrain. The project emphasized designing with analysis from the outset, using early FEA to guide tradeoffs between strength, weight, and manufacturability. Working within a large team highlighted how tightly coupled mechanical decisions are in complex systems, where changes to one component propagate throughout the design.
 
 ## Appendix
 

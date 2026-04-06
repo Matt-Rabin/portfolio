@@ -8,9 +8,10 @@ interface Props {
   tags: string[];
   logoSrc: ImageMetadata;
   heroSrc: ImageMetadata;
+  videoEmbed?: string;
 }
 
-const { title, subtitle, description, tags, logoSrc, heroSrc } = Astro.props;
+const { title, subtitle, description, tags, logoSrc, heroSrc, videoEmbed } = Astro.props;
 
 const isSvg = logoSrc.format === 'svg';
 ---
@@ -26,7 +27,19 @@ const isSvg = logoSrc.format === 'svg';
       <p class="hero-tags">{tags.join(' \u2022 ')}</p>
     </div>
     <div class="hero-image">
-      <Image src={heroSrc} alt={title} width={640} />
+      {videoEmbed ? (
+        <div class="hero-video">
+          <iframe
+            src={videoEmbed}
+            title={title}
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ) : (
+        <Image src={heroSrc} alt={title} width={640} />
+      )}
     </div>
   </div>
 </section>
@@ -71,6 +84,21 @@ const isSvg = logoSrc.format === 'svg';
   .hero-image img {
     width: 100%;
     height: auto;
+  }
+
+  .hero-video {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+
+  .hero-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
   }
 
   @media (max-width: 768px) {

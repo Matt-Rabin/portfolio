@@ -30,21 +30,15 @@ has_appendix: false
 
 Our final Mechatronics project focused on designing and building a compact fighting robot for a live multi-team competition. The goal was to create a fast, robust platform capable of autonomous wall-following, semi-autonomous navigation using an IR tower, manual control, and reliable physical interaction with game elements.
 
----
-
 ## Concept
 
 The project began with hand sketches exploring overall form, drive configuration, and attack strategies. We chose a low, forward-weighted chassis with a compact footprint and clear front interaction zone, establishing constraints around packaging and layout that guided subsequent prototypes.
 We used an early assembled platform to validate driving behavior, sensor placement, and control strategies before committing to the final enclosure.
 I designed, soldered, and assembled all custom perfboard electronics for power distribution, motor control, sensing, and system interconnects. The boards worked as intended on first integration and supported a stable final system architecture.
 
----
-
 ## Results
 
 The robot demonstrated reliable wall-following and stable manual control during testing and competition, with robustness prioritized over more complex autonomous behaviors. Final deliverables included a fully functional robot, detailed CAD drawings, electrical schematics, and embedded software.
-
----
 
 ## Appendix
 

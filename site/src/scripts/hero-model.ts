@@ -102,7 +102,7 @@ export function initHeroModel() {
           fittedSize.y / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
         const fitWidthDistance =
           fittedSize.x / (2 * camera.aspect * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
-        const distance = 1.18 * Math.max(fitHeightDistance, fitWidthDistance, fittedSize.z);
+        const distance = 0.95 * Math.max(fitHeightDistance, fitWidthDistance, fittedSize.z);
 
         camera.position.set(0, fittedSize.y * 0.035, distance + fittedSize.z * 0.42);
         camera.lookAt(0, 0, 0);

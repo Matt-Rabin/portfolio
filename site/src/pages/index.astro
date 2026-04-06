@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import HeroHome from '../components/HeroHome.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
-import TimelineSection from '../components/TimelineSection.astro';
 import ContactTeaser from '../components/ContactTeaser.astro';
 import { getCollection } from 'astro:content';
 
@@ -26,12 +25,15 @@ for (const [path, mod] of Object.entries(images)) {
     <h2 slot="header" class="section-heading">Featured Projects</h2>
   </ProjectGrid>
 
-  <TimelineSection />
   <ContactTeaser />
 </Base>
 
 <style>
   .section-heading {
     margin-bottom: var(--space-lg);
+  }
+
+  :global(.project-grid-section) {
+    padding-top: var(--space-md);
   }
 </style>

@@ -14,6 +14,7 @@ const projects = defineCollection({
     results_images: z.array(z.string()).default([]),
     appendix_images: z.array(z.string()).default([]),
     has_appendix: z.boolean().default(false),
+    video_embed: z.string().optional(),
   }),
 });
 

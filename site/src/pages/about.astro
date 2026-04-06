@@ -1,26 +1,33 @@
 ---
 import Base from '../layouts/Base.astro';
+import HeroModel from '../components/HeroModel.astro';
 
 const linkedin = 'https://www.linkedin.com/in/matthew-rabin/';
 
 const timelineEntries = [
   {
-    role: 'Graduate Student - Integrated Product Design',
+    role: 'MSE Student: Integrated Product Design',
     org: 'University of Pennsylvania',
-    period: '2024 - 2025',
-    description: 'M.S.E. in Integrated Product Design, combining engineering, design, and business.',
+    period: '2024 – Present',
+    description: 'Pursuing an MSE in Integrated Product Design with a robotics focus. The program blended the full design process with business and engineering: from user research and ideation through prototyping, manufacturing, and market validation. In addition to my studies, I was TAing product design at Wharton for both years, and doing research at the GRASP Lab developing novel actuator hardware with Dr. Mark Yim.',
   },
   {
-    role: 'Product Design Intern',
-    org: 'Spatial Pixel',
-    period: 'Spring 2025',
-    description: 'AR/XR design and development for projection-based creative workspaces.',
+    role: 'Engineer',
+    org: 'Belcan / Rolls-Royce Naval Marine',
+    period: '2024',
+    description: 'Contracted into Rolls-Royce\'s naval division and built a MATLAB automation tool that cut a six-month customer project down to three, saving over $100k. Also modernized legacy propeller geometry tooling that hadn\'t been touched in years.',
+  },
+  {
+    role: 'Robotics Engineer',
+    org: 'Carbon Origins Inc.',
+    period: '2021 – 2023',
+    description: 'Joined a VR teleoperation robotics startup as an intern during my senior year doing industrial design and creating an omnidirectional drive for a food delivery robot. Stayed on full time, leading hardware upgrades across the active fleet and eventually helping run operations for a pilot program in Spain. Started developing the hardware for the next product, a Bobcat vehicle controlled by our software.',
   },
   {
     role: 'B.S. Mechanical Engineering',
     org: 'Case Western Reserve University',
-    period: '2019 - 2023',
-    description: 'Mechanical engineering with focus on design, prototyping, and mechatronics.',
+    period: '2018 – 2022',
+    description: 'Studied mechanical engineering in undergrad, designing everything from motorcycle engines to finger prosthetics, and graduated in 2022.',
   },
 ];
 ---
@@ -28,11 +35,17 @@ const timelineEntries = [
 <Base title="Work by Matthew Rabin">
   <section class="about section">
     <div class="container">
-      <h1 class="about-heading">About</h1>
-
-      <p class="about-bio">
-        I'm Matt, a New Englander engineer and product designer based in Philadelphia, building products from the inside out (with a particular focus on robotics and embedded systems). I care as much about how something feels to use as how it's built, which means I spend equal time on tolerances and interactions. When I'm not building, I'm deep in sports statistics, instant photography, or convincing people that geography is interesting.
-      </p>
+      <div class="about-hero">
+        <div class="about-hero-text">
+          <h1 class="about-heading">About</h1>
+          <p class="about-bio">
+            I'm Matt, a New Englander engineer and product designer based in Philadelphia, building products from the inside out (with a particular focus on robotics and embedded systems). I care as much about how something feels to use as how it's built, which means I spend equal time on tolerances and interactions. When I'm not building, I'm deep in sports statistics, instant photography, or convincing people that geography is interesting.
+          </p>
+        </div>
+        <div class="about-hero-portrait">
+          <HeroModel />
+        </div>
+      </div>
 
       <h2 class="about-subheading">Timeline</h2>
 
@@ -51,6 +64,8 @@ const timelineEntries = [
         ))}
       </div>
 
+      <a href="/contact" class="resume-link">Resume &rarr;</a>
+
       <h2 class="about-subheading">Links</h2>
 
       <div class="about-links">
@@ -64,6 +79,20 @@ const timelineEntries = [
 </Base>
 
 <style>
+  .about-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .about-hero-portrait {
+    display: flex;
+    justify-content: flex-end;
+    min-height: min(80vh, 42rem);
+  }
+
   .about-heading {
     margin-bottom: var(--space-md);
   }
@@ -74,13 +103,22 @@ const timelineEntries = [
     line-height: 1.7;
     color: rgba(0, 0, 0, 0.7);
     max-width: 40rem;
-    margin-bottom: var(--space-xl);
   }
 
   .about-subheading {
     font-weight: 700;
     font-size: 1.25rem;
     margin-bottom: var(--space-lg);
+  }
+
+  .resume-link {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    border-bottom: 2px solid var(--color-text);
+    padding-bottom: 0.15rem;
+    margin-bottom: var(--space-xl);
   }
 
   .timeline {
@@ -152,6 +190,23 @@ const timelineEntries = [
   .about-link-value {
     font-weight: 400;
     font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .about-hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .about-hero-portrait {
+      justify-content: center;
+      order: -1;
+    }
+
+    .about-bio {
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   @media (max-width: 480px) {
