@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import poster from '../assets/images/2xImages/StylizedPortrait@2x.webp';
+import modelUrl from '../assets/3dmodels/MattFace.glb?url';
+---
+
+<div class="hero-model" data-hero-model data-model-url={modelUrl}>
+  <div class="hero-model-canvas" aria-hidden="true"></div>
+  <div class="hero-model-poster">
+    <Image src={poster} alt="Stylized portrait of Matthew Rabin" width={560} />
+  </div>
+  <noscript>
+    <div class="hero-model-noscript">
+      <Image src={poster} alt="Stylized portrait of Matthew Rabin" width={560} />
+    </div>
+  </noscript>
+</div>
+
+<script>
+  import { initHeroModel } from '../scripts/hero-model';
+
+  initHeroModel();
+</script>
+
+<style>
+  .hero-model {
+    position: relative;
+    width: min(100%, 37rem);
+    height: min(84vh, 45rem);
+    margin-left: auto;
+  }
+
+  .hero-model-canvas,
+  .hero-model-poster,
+  .hero-model-noscript {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-model-canvas {
+    border-radius: 1.5rem;
+    overflow: hidden;
+  }
+
+  .hero-model-canvas :global(canvas) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hero-model-poster,
+  .hero-model-noscript {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.24s ease;
+  }
+
+  .hero-model-poster.is-ready {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hero-model-poster :global(img),
+  .hero-model-noscript :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .hero-model {
+      margin: 0 auto;
+      width: min(100%, 28rem);
+      height: min(68vh, 32rem);
+    }
+  }
+</style>

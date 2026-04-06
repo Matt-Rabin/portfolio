@@ -1,5 +1,6 @@
 ---
 import LiveClock from './LiveClock.astro';
+import siteLogo from '../assets/images/SiteLogo.svg';
 
 const currentPath = Astro.url.pathname;
 
@@ -11,11 +12,16 @@ const navLinks = [
 ];
 ---
 
-<nav class="nav">
+<nav class="nav" data-collapsible-nav>
   <div class="nav-top container">
     <div class="nav-left">
-      <a href="/" class="nav-name">Matthew Rabin</a>
-      <span class="nav-clock"><LiveClock /></span>
+      <a href="/" class="nav-name" aria-label="Matthew Rabin home">
+        <span class="nav-name-text">Matthew Rabin</span>
+        <span class="nav-logo-mark" aria-hidden="true">
+          <img src={siteLogo.src ?? siteLogo} alt="" />
+        </span>
+      </a>
+      <span class="nav-clock nav-clock-top"><LiveClock /></span>
     </div>
     <div class="nav-right">
       <p class="nav-blurb">Engineer and designer specialized in designing products, interfaces, hardware and robotics, with a focus on making things that work beautifully.</p>
@@ -31,7 +37,14 @@ const navLinks = [
       ) : (
         <a
           href={href}
-          class:list={['nav-link', { active: currentPath.startsWith(href) }]}
+          class:list={[
+            'nav-link',
+            {
+              active: href === '/'
+                ? currentPath === '/'
+                : currentPath.startsWith(href),
+            },
+          ]}
         >
           {label}
         </a>
@@ -40,6 +53,27 @@ const navLinks = [
   </div>
 </nav>
 
+<script>
+  const nav = document.querySelector('[data-collapsible-nav]');
+
+  if (nav) {
+    let frame = 0;
+
+    const syncCollapsedState = () => {
+      frame = 0;
+      nav.classList.toggle('is-collapsed', window.scrollY > 24);
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(syncCollapsedState);
+    };
+
+    syncCollapsedState();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
+
 <style>
   .nav {
     position: sticky;
@@ -47,7 +81,11 @@ const navLinks = [
     z-index: 100;
     background: var(--color-bg);
     padding-top: var(--space-sm);
-    padding-bottom: var(--space-sm);
+    padding-bottom: 0.4rem;
+    transition:
+      padding-top 0.24s ease,
+      box-shadow 0.24s ease,
+      background-color 0.24s ease;
   }
 
   .nav-top {
@@ -55,48 +93,94 @@ const navLinks = [
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-lg);
+    min-height: 3.8rem;
+    transition:
+      min-height 0.24s ease,
+      gap 0.24s ease;
   }
 
   .nav-left {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    align-items: start;
     flex-shrink: 0;
+    position: relative;
   }
 
   .nav-name {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
     font-weight: 700;
     font-size: 1rem;
     letter-spacing: -0.01em;
+    position: relative;
+  }
+
+  .nav-name-text,
+  .nav-logo-mark {
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .nav-logo-mark {
+    position: absolute;
+    inset: 50% auto auto 0;
+    transform: translateY(-50%) scale(0.85);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav-logo-mark img {
+    width: 1.65rem;
+    height: 1.65rem;
   }
 
   .nav-clock {
     font-weight: 300;
     font-size: 0.75rem;
     color: rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    grid-row: 2;
+    transition:
+      color 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.28s ease;
   }
 
   .nav-right {
-    max-width: 28rem;
+    max-width: 37rem;
     text-align: right;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      max-height 0.24s ease;
   }
 
   .nav-blurb {
     font-weight: 300;
-    font-size: 0.75rem;
-    line-height: 1.5;
+    font-size: 0.96rem;
+    line-height: 1.55;
     color: rgba(0, 0, 0, 0.4);
+    transition: color 0.2s ease;
+  }
+
+  .nav-blurb:hover {
+    color: #000;
   }
 
   .nav-rule {
     border: none;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
-    margin: var(--space-sm) auto;
+    margin: 0.2rem auto 0.5rem;
   }
 
   .nav-links-row {
     display: flex;
     gap: var(--space-md);
+    align-items: center;
   }
 
   .nav-link {
@@ -110,10 +194,44 @@ const navLinks = [
     font-weight: 600;
   }
 
+  .nav.is-collapsed {
+    padding-top: 0.6rem;
+    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.04);
+  }
+
+  .nav.is-collapsed .nav-top {
+    min-height: 2.25rem;
+    gap: var(--space-md);
+  }
+
+  .nav.is-collapsed .nav-name-text {
+    opacity: 0;
+    transform: translateY(-0.15rem);
+    pointer-events: none;
+  }
+
+  .nav.is-collapsed .nav-logo-mark {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  .nav.is-collapsed .nav-clock {
+    transform: translate(2.3rem, -1.15rem);
+  }
+
+  .nav.is-collapsed .nav-right {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    pointer-events: none;
+    max-height: 0;
+    overflow: hidden;
+  }
+
   @media (max-width: 768px) {
     .nav-top {
       flex-direction: column;
-      gap: var(--space-xs);
+      gap: 0.75rem;
+      min-height: auto;
     }
 
     .nav-right {
@@ -124,6 +242,10 @@ const navLinks = [
     .nav-links-row {
       flex-wrap: wrap;
       gap: var(--space-sm);
+    }
+
+    .nav.is-collapsed .nav-top {
+      min-height: auto;
     }
   }
 </style>

@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import portrait from '../assets/images/2xImages/StylizedPortrait@2x.webp';
+import HeroModel from './HeroModel.astro';
 ---
 
 <section class="hero">
@@ -14,7 +13,7 @@ import portrait from '../assets/images/2xImages/StylizedPortrait@2x.webp';
       <p class="hero-cta">Let's build something worth using.</p>
     </div>
     <div class="hero-portrait">
-      <Image src={portrait} alt="Stylized portrait of Matthew Rabin" width={560} />
+      <HeroModel />
     </div>
   </div>
 </section>
@@ -66,12 +65,7 @@ import portrait from '../assets/images/2xImages/StylizedPortrait@2x.webp';
   .hero-portrait {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .hero-portrait img {
-    max-height: 80vh;
-    width: auto;
-    object-fit: contain;
+    min-height: min(80vh, 42rem);
   }
 
   @media (max-width: 768px) {

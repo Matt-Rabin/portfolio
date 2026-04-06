@@ -4,7 +4,7 @@ title: "Battlebot"
 subtitle: "Custom Fighting Robot Final Project"
 
 # Set to true to show on homepage, false to archive
-featured: true
+featured: false
 
 # Your bottom metadata line e.g. ["Fall 2024", "Individual Project", "Design Processes"]
 tags: [Fall 2024, Group Project, Mechatronics, Stan Han, Steyn Knollema]

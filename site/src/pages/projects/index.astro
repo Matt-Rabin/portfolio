@@ -14,7 +14,6 @@ for (const [path, mod] of Object.entries(allImages)) {
   imageMap[path] = mod.default;
 }
 
-// Extract only year and project-type tags for filtering
 const seasonYearRe = /^(Fall|Spring|Summer|Winter)\s+\d{4}$/;
 const typeTags = ['Individual Project', 'Group Project'];
 const filterTags = [
@@ -28,7 +27,7 @@ const filterTags = [
 ];
 ---
 
-<Base title="Projects — Matthew Rabin">
+<Base title="Work by Matthew Rabin">
   <section class="archive section">
     <div class="container">
       <h1 class="archive-heading">Projects</h1>
@@ -61,21 +60,21 @@ const filterTags = [
 </Base>
 
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-  const items = document.querySelectorAll<HTMLElement>('.grid-item');
+  const buttons = document.querySelectorAll('.filter-btn');
+  const items = document.querySelectorAll('.grid-item');
 
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const tag = btn.dataset.tag!;
+      const tag = btn.dataset.tag;
 
-      buttons.forEach((b) => b.classList.remove('active'));
+      buttons.forEach((button) => button.classList.remove('active'));
       btn.classList.add('active');
 
       items.forEach((item) => {
         if (tag === 'all') {
           item.style.display = '';
         } else {
-          const tags: string[] = JSON.parse(item.dataset.tags || '[]');
+          const tags = JSON.parse(item.dataset.tags || '[]');
           item.style.display = tags.includes(tag) ? '' : 'none';
         }
       });
