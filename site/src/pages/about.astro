@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+
+const linkedin = 'https://www.linkedin.com/in/matthew-rabin/';
+
+const timelineEntries = [
+  {
+    role: 'Graduate Student — Integrated Product Design',
+    org: 'University of Pennsylvania',
+    period: '2024 – 2025',
+    description: 'M.S.E. in Integrated Product Design, combining engineering, design, and business.',
+  },
+  {
+    role: 'Product Design Intern',
+    org: 'Spatial Pixel',
+    period: 'Spring 2025',
+    description: 'AR/XR design and development for projection-based creative workspaces.',
+  },
+  {
+    role: 'B.S. Mechanical Engineering',
+    org: 'Case Western Reserve University',
+    period: '2019 – 2023',
+    description: 'Mechanical engineering with focus on design, prototyping, and mechatronics.',
+  },
+];
+---
+
+<Base title="About — Matthew Rabin">
+  <section class="about section">
+    <div class="container">
+      <h1 class="about-heading">About</h1>
+
+      <p class="about-bio">
+        I'm Matt, a New Englander engineer and product designer based in Philadelphia, building products from the inside out (with a particular focus on robotics and embedded systems). I care as much about how something feels to use as how it's built, which means I spend equal time on tolerances and interactions. When I'm not building, I'm deep in sports statistics, instant photography, or convincing people that geography is interesting.
+      </p>
+
+      <h2 class="about-subheading">Timeline</h2>
+
+      <div class="timeline">
+        {timelineEntries.map((entry) => (
+          <div class="timeline-entry">
+            <span class="timeline-period">{entry.period}</span>
+            <div class="timeline-details">
+              <h3 class="timeline-role">{entry.role}</h3>
+              <p class="timeline-org">{entry.org}</p>
+              {entry.description && (
+                <p class="timeline-desc">{entry.description}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h2 class="about-subheading">Links</h2>
+
+      <div class="about-links">
+        <a href={linkedin} target="_blank" rel="noopener noreferrer" class="about-link">
+          <span class="about-link-label">LinkedIn</span>
+          <span class="about-link-value">linkedin.com/in/matthew-rabin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .about-bio {
+    font-weight: 200;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(0, 0, 0, 0.7);
+    max-width: 40rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  .about-subheading {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .timeline-entry:last-child {
+    border-bottom: none;
+  }
+
+  .timeline-period {
+    font-weight: 300;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.5);
+    padding-top: 0.2rem;
+  }
+
+  .timeline-role {
+    font-weight: 700;
+    font-size: 1.0625rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-org {
+    font-weight: 400;
+    font-size: 0.9375rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: var(--space-xs);
+  }
+
+  .timeline-desc {
+    font-weight: 200;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .about-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .about-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .about-link-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .about-link-value {
+    font-weight: 400;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .timeline-entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+  }
+</style>

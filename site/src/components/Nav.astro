@@ -1,0 +1,129 @@
+---
+import LiveClock from './LiveClock.astro';
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/mrabinportfolio.pdf', label: 'Resume', external: true },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<nav class="nav">
+  <div class="nav-top container">
+    <div class="nav-left">
+      <a href="/" class="nav-name">Matthew Rabin</a>
+      <span class="nav-clock"><LiveClock /></span>
+    </div>
+    <div class="nav-right">
+      <p class="nav-blurb">Engineer and designer specialized in designing products, interfaces, hardware and robotics, with a focus on making things that work beautifully.</p>
+    </div>
+  </div>
+
+  <hr class="nav-rule container" />
+
+  <div class="nav-links-row container">
+    {navLinks.map(({ href, label, external }) =>
+      external ? (
+        <a href={href} class="nav-link" target="_blank" rel="noopener noreferrer">{label}</a>
+      ) : (
+        <a
+          href={href}
+          class:list={['nav-link', { active: currentPath.startsWith(href) }]}
+        >
+          {label}
+        </a>
+      )
+    )}
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
+  }
+
+  .nav-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+  }
+
+  .nav-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  .nav-name {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-clock {
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .nav-right {
+    max-width: 28rem;
+    text-align: right;
+  }
+
+  .nav-blurb {
+    font-weight: 300;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .nav-rule {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin: var(--space-sm) auto;
+  }
+
+  .nav-links-row {
+    display: flex;
+    gap: var(--space-md);
+  }
+
+  .nav-link {
+    font-weight: 300;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+
+  .nav-link.active {
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .nav-top {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .nav-right {
+      text-align: left;
+      max-width: none;
+    }
+
+    .nav-links-row {
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+  }
+</style>

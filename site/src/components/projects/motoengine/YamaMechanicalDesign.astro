@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="yama-mech">
+  <div class="top-section">
+    <div class="text-col">
+      <p class="body-text">I served as the team's Design Specialist, focusing on the piston and crankshaft assemblies. I designed and detailed these components in CAD, resolving clearances, tolerances, and motion constraints across the full engine cycle.</p>
+      <p class="body-text">Critical parts were validated using finite element analysis. Early stress failures in the piston head led to a redesigned geometry that reduced weight and improved safety factors under load.</p>
+    </div>
+    {img('Crankshaft 1@2x.webp') && <div class="img-crankshaft"><Image src={img('Crankshaft 1@2x.webp')} alt="Crankshaft CAD render" width={700} /></div>}
+  </div>
+
+  <div class="bottom-section">
+    {img('PistonFEA 1@2x.webp') && <div class="img-fea"><Image src={img('PistonFEA 1@2x.webp')} alt="Piston FEA analysis" width={500} /></div>}
+    {img('image 4@2x.webp') && <div class="img-drawing"><Image src={img('image 4@2x.webp')} alt="Technical drawings" width={700} /></div>}
+  </div>
+</div>
+
+<style>
+  .yama-mech {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+    margin-bottom: var(--space-sm);
+  }
+
+  .top-section {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .img-crankshaft img {
+    width: 100%;
+    height: auto;
+  }
+
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: var(--space-sm);
+  }
+
+  .img-fea img,
+  .img-drawing img {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .top-section,
+    .bottom-section {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

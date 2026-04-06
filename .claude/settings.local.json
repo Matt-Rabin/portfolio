@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx astro:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/projects/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/resume/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/contact/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/projects/ambi/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/projects/ambi)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/contact)",
+      "Bash(curl -sv http://localhost:4321/contact)",
+      "Bash(curl -s http://localhost:4322/)",
+      "Bash(curl:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__get_metadata",
+      "Bash(grep -oE '<frame id=\\\\\\\\\"[^\"]*\\\\\\\\\" name=\\\\\\\\\"[^\"]*\\\\\\\\\"')",
+      "Bash(npm run:*)"
+    ]
+  }
+}

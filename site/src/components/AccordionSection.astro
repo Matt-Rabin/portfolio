@@ -1,0 +1,93 @@
+---
+interface Props {
+  label: string;
+  open?: boolean;
+}
+
+const { label, open = true } = Astro.props;
+---
+
+<details class="accordion" open={open ? true : undefined}>
+  <summary class="accordion-header">
+    <span class="accordion-label">{label}</span>
+    <span class="accordion-toggle" aria-hidden="true"></span>
+  </summary>
+  <div class="accordion-body">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .accordion {
+    position: relative;
+    padding: var(--space-lg) 0;
+    padding-left: 4.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .accordion-header {
+    cursor: pointer;
+    list-style: none;
+    display: block;
+  }
+
+  .accordion-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion-header::marker {
+    display: none;
+    content: '';
+  }
+
+  .accordion-label {
+    position: absolute;
+    left: 0;
+    top: var(--space-lg);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-family);
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    user-select: none;
+  }
+
+  .accordion-toggle {
+    position: absolute;
+    right: 0;
+    top: var(--space-lg);
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .accordion-toggle::before {
+    content: '+';
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.2s;
+  }
+
+  details[open] .accordion-toggle::before {
+    content: '\2212';
+  }
+
+  .accordion-body {
+    padding-top: var(--space-sm);
+  }
+
+  @media (max-width: 768px) {
+    .accordion {
+      padding-left: 3rem;
+    }
+
+    .accordion-label {
+      font-size: 1.25rem;
+    }
+  }
+</style>

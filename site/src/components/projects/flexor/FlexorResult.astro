@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="flexor-result">
+  <div class="top-section">
+    <p class="body-text">The final prototype introduced improved joint geometry, stronger materials, and a simplified cable path. Using nylon string and rubber band tensioning, the prosthetic achieved a natural bending motion that closely mirrored a real finger. The full assembly cost under one dollar per unit to fabricate. Testing confirmed reliable actuation and easy repair, validating the modular approach for low-cost accessibility.</p>
+    <div class="renders">
+      {img('FlexTipRender@2x.webp') && <Image src={img('FlexTipRender@2x.webp')} alt="Tip joint render" width={300} />}
+      {img('FlexMiddleRender@2x.webp') && <Image src={img('FlexMiddleRender@2x.webp')} alt="Middle joint render" width={300} />}
+      {img('FlexBaseRender@2x.webp') && <Image src={img('FlexBaseRender@2x.webp')} alt="Base joint render" width={300} />}
+      {img('FlexFullRender@2x.webp') && <div class="full-render"><Image src={img('FlexFullRender@2x.webp')} alt="Full prosthetic render" width={500} /></div>}
+    </div>
+  </div>
+
+  <div class="photo-row">
+    {img('FlexHandPhoto@2x.webp') && <Image src={img('FlexHandPhoto@2x.webp')} alt="Prosthetic on hand" width={400} />}
+    {img('FlexFinalPhoto1@2x.webp') && <Image src={img('FlexFinalPhoto1@2x.webp')} alt="Final prototype detail" width={400} />}
+    {img('FlexFinalPhoto2@2x.webp') && <Image src={img('FlexFinalPhoto2@2x.webp')} alt="Final prototype side view" width={400} />}
+  </div>
+</div>
+
+<style>
+  .flexor-result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .top-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .renders {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+    align-items: end;
+  }
+
+  .renders img {
+    width: 100%;
+    height: auto;
+  }
+
+  .full-render {
+    grid-column: 1 / -1;
+  }
+
+  .photo-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .photo-row img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .top-section {
+      grid-template-columns: 1fr;
+    }
+
+    .renders {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .photo-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

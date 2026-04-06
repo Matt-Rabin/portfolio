@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  description: string;
+  tags: string[];
+  logoSrc: ImageMetadata;
+  heroSrc: ImageMetadata;
+}
+
+const { title, subtitle, description, tags, logoSrc, heroSrc } = Astro.props;
+
+const isSvg = logoSrc.format === 'svg';
+---
+
+<section class="project-hero">
+  <div class="hero-inner container">
+    <div class="hero-text">
+      <div class="hero-logo">
+        <Image src={logoSrc} alt={`${title} logo`} width={isSvg ? undefined : 500} />
+      </div>
+      <h2 class="hero-subtitle">{subtitle}</h2>
+      <p class="hero-description">{description}</p>
+      <p class="hero-tags">{tags.join(' \u2022 ')}</p>
+    </div>
+    <div class="hero-image">
+      <Image src={heroSrc} alt={title} width={640} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-hero {
+    padding: var(--space-xl) 0 var(--space-lg);
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .hero-logo img {
+    max-height: 5rem;
+    width: auto;
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-subtitle {
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-description {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-tags {
+    font-weight: 300;
+    font-size: 0.8125rem;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-image {
+      order: -1;
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import ProjectCard from './ProjectCard.astro';
+
+interface ProjectEntry {
+  id: string;
+  data: {
+    title: string;
+    subtitle: string;
+    hero: string;
+  };
+}
+
+interface Props {
+  projects: ProjectEntry[];
+  images: Record<string, ImageMetadata>;
+}
+
+const { projects, images } = Astro.props;
+---
+
+<section class="project-grid-section section">
+  <div class="container">
+    <slot name="header" />
+    <div class="project-grid">
+      {projects.map((project) => {
+        const heroKey = `/src/assets/images/${project.id}/${project.data.hero}`;
+        const heroImage = images[heroKey];
+        return (
+          <ProjectCard
+            slug={project.id}
+            title={project.data.title}
+            subtitle={project.data.subtitle}
+            heroImage={heroImage}
+          />
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 480px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

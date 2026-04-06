@@ -1,0 +1,86 @@
+---
+const timelineEntries = [
+  {
+    role: 'Graduate Student — Integrated Product Design',
+    org: 'University of Pennsylvania',
+    period: '2024 – 2025',
+  },
+  {
+    role: 'Product Design Intern',
+    org: 'Spatial Pixel',
+    period: 'Spring 2025',
+  },
+  {
+    role: 'B.S. Mechanical Engineering',
+    org: 'Case Western Reserve University',
+    period: '2019 – 2023',
+  },
+];
+---
+
+<section class="timeline section">
+  <div class="container">
+    <h2 class="timeline-heading">Timeline</h2>
+    <div class="timeline-list">
+      {timelineEntries.map((entry) => (
+        <div class="timeline-entry">
+          <span class="timeline-period">{entry.period}</span>
+          <div class="timeline-details">
+            <p class="timeline-role">{entry.role}</p>
+            <p class="timeline-org">{entry.org}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline-heading {
+    margin-bottom: var(--space-lg);
+  }
+
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .timeline-entry:last-child {
+    border-bottom: none;
+  }
+
+  .timeline-period {
+    font-weight: 300;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.5);
+    padding-top: 0.15rem;
+  }
+
+  .timeline-role {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .timeline-org {
+    font-weight: 300;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  @media (max-width: 480px) {
+    .timeline-entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="ambi-concept">
+  <div class="text-row">
+    <p class="body-text">Early versions explored how users might "select" sound physically rather than through a screen.</p>
+    <p class="body-text">The first sketch model used discrete markers to represent different environments like city, forest, and storm.</p>
+  </div>
+
+  <div class="image-row-main">
+    {img('image 9@2x.webp') && <div class="img-sketch"><Image src={img('image 9@2x.webp')} alt="Early concept sketches" width={700} /></div>}
+    {img('image 53@2x.webp') && <div class="img-model"><Image src={img('image 53@2x.webp')} alt="First sketch model" width={700} /></div>}
+  </div>
+
+  <div class="bottom-row">
+    <p class="body-text bottom-text">The concept later shifted to a smoother interaction; a single metal ball that snaps into magnetic divots, letting users choose and adjust sounds through that unique interface.</p>
+    <div class="stage-images">
+      {img('Stage1 3.svg') && <Image src={img('Stage1 3.svg')} alt="Interaction stage 1" width={280} />}
+      {img('Stage2 3.svg') && <Image src={img('Stage2 3.svg')} alt="Interaction stage 2" width={280} />}
+      {img('Stage3_2 3.svg') && <Image src={img('Stage3_2 3.svg')} alt="Interaction stage 3" width={280} />}
+    </div>
+  </div>
+</div>
+
+<style>
+  .ambi-concept {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .text-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  .image-row-main {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .image-row-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .bottom-text {
+    padding-top: var(--space-sm);
+  }
+
+  .stage-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  .stage-images img {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .text-row,
+    .image-row-main,
+    .bottom-row {
+      grid-template-columns: 1fr;
+    }
+
+    .stage-images {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

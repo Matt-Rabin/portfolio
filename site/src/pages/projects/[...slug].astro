@@ -1,0 +1,191 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import ProjectHero from '../../components/ProjectHero.astro';
+import AccordionSection from '../../components/AccordionSection.astro';
+import ImageGallery from '../../components/ImageGallery.astro';
+
+// Per-project section overrides
+import AmbiConcept from '../../components/projects/ambi/AmbiConcept.astro';
+import AmbiResult from '../../components/projects/ambi/AmbiResult.astro';
+import BattlebotConcept from '../../components/projects/battlebot/BattlebotConcept.astro';
+import BattlebotResults from '../../components/projects/battlebot/BattlebotResults.astro';
+import FlexorConcept from '../../components/projects/flexor/FlexorConcept.astro';
+import FlexorResult from '../../components/projects/flexor/FlexorResult.astro';
+import SpatialConcept from '../../components/projects/spatialpixel/SpatialConcept.astro';
+import SpatialResults from '../../components/projects/spatialpixel/SpatialResults.astro';
+import SpatialTechnical from '../../components/projects/spatialpixel/SpatialTechnical.astro';
+import YamaMechanicalDesign from '../../components/projects/motoengine/YamaMechanicalDesign.astro';
+import YamaResult from '../../components/projects/motoengine/YamaResult.astro';
+
+// Override lookup: projectId → sectionHeading → Component
+const overrides: Record<string, Record<string, any>> = {
+  ambi: { 'Concept': AmbiConcept, 'Result': AmbiResult },
+  battlebot: { 'Concept': BattlebotConcept, 'Results': BattlebotResults },
+  flexor: { 'Concept': FlexorConcept, 'Result': FlexorResult },
+  spatialpixel: { 'Concept': SpatialConcept, 'Results': SpatialResults, 'Technical': SpatialTechnical },
+  motoengine: { 'Mechanical Design': YamaMechanicalDesign, 'Result': YamaResult },
+};
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+
+// Get raw markdown body to split into sections
+const rawBody = project.body || '';
+
+// Parse sections from raw markdown
+const sectionRegex = /^## (.+)$/gm;
+const matches: { heading: string; index: number }[] = [];
+let match;
+while ((match = sectionRegex.exec(rawBody)) !== null) {
+  matches.push({ heading: match[1].trim(), index: match.index });
+}
+
+const sections: { heading: string; body: string }[] = [];
+for (let i = 0; i < matches.length; i++) {
+  const start = matches[i].index + rawBody.slice(matches[i].index).indexOf('\n') + 1;
+  const end = i + 1 < matches.length ? matches[i + 1].index : rawBody.length;
+  const body = rawBody.slice(start, end).trim();
+  sections.push({ heading: matches[i].heading, body });
+}
+
+// First section is "Hero"
+const heroSection = sections.find((s) => s.heading.toLowerCase() === 'hero');
+const heroDescription = heroSection?.body || '';
+
+// Remaining sections become accordion panels
+const contentSections = sections.filter((s) => s.heading.toLowerCase() !== 'hero');
+
+// Filter out Appendix if has_appendix is false
+const visibleSections = contentSections.filter((s) => {
+  if (s.heading.toLowerCase() === 'appendix' && !data.has_appendix) return false;
+  return true;
+});
+
+// Map section headings to image arrays (for generic fallback)
+function getImagesForSection(heading: string): string[] {
+  const lower = heading.toLowerCase();
+  if (lower === 'results' || lower === 'result') return data.results_images;
+  if (lower === 'appendix' || lower === 'technical') return data.appendix_images;
+  return data.concept_images;
+}
+
+// Resolve all images
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{webp,png,jpg,jpeg,svg}',
+  { eager: true }
+);
+const imageMap: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(allImages)) {
+  imageMap[path] = mod.default;
+}
+
+// Resolve logo and hero images
+const logoKey = `/src/assets/images/${project.id}/${data.logo}`;
+const heroKey = `/src/assets/images/${project.id}/${data.hero}`;
+const logoSrc = imageMap[logoKey];
+const heroSrc = imageMap[heroKey];
+
+// Simple markdown to HTML (for generic fallback)
+function simpleMarkdown(text: string): string {
+  return text
+    .split('\n\n')
+    .map((para) => {
+      const trimmed = para.trim();
+      if (!trimmed) return '';
+      let html = trimmed
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+      if (html.match(/^[-*]\s/m)) {
+        const items = html
+          .split(/\n/)
+          .filter((l) => l.trim())
+          .map((l) => `<li>${l.replace(/^[-*]\s*/, '')}</li>`)
+          .join('');
+        return `<ul>${items}</ul>`;
+      }
+      return `<p>${html.replace(/\n/g, ' ')}</p>`;
+    })
+    .join('');
+}
+
+// Check for overrides
+const projectOverrides = overrides[project.id] || {};
+---
+
+<ProjectLayout title={data.title}>
+  {logoSrc && heroSrc && (
+    <ProjectHero
+      title={data.title}
+      subtitle={data.subtitle}
+      description={heroDescription}
+      tags={data.tags}
+      logoSrc={logoSrc}
+      heroSrc={heroSrc}
+    />
+  )}
+
+  <div class="project-sections container">
+    {visibleSections.map((section) => {
+      const Override = projectOverrides[section.heading];
+      if (Override) {
+        return (
+          <AccordionSection label={section.heading} open={true}>
+            <Override images={imageMap} projectId={project.id} />
+          </AccordionSection>
+        );
+      }
+      // Generic fallback
+      return (
+        <AccordionSection label={section.heading} open={true}>
+          <div class="generic-section">
+            <div class="generic-text" set:html={simpleMarkdown(section.body)} />
+            <ImageGallery
+              imageFiles={getImagesForSection(section.heading)}
+              projectId={project.id}
+              images={imageMap}
+              alt={section.heading}
+            />
+          </div>
+        </AccordionSection>
+      );
+    })}
+  </div>
+</ProjectLayout>
+
+<style>
+  .generic-section {
+    max-width: 100%;
+  }
+
+  .generic-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    max-width: 65ch;
+    margin-bottom: var(--space-md);
+  }
+
+  .generic-text :global(p) {
+    margin-bottom: var(--space-sm);
+  }
+
+  .generic-text :global(ul),
+  .generic-text :global(ol) {
+    padding-left: 1.25rem;
+    margin-bottom: var(--space-sm);
+    list-style: disc;
+  }
+
+  .generic-text :global(strong) {
+    font-weight: 700;
+  }
+</style>

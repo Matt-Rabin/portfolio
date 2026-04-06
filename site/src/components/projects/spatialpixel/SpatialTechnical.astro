@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="spatial-technical">
+  <div class="text-block">
+    <p class="body-text">To support smarter interactions, I offered a number of technical improvements to Spatial Pixel:</p>
+    <ul class="bullet-list">
+      <li><strong>Live OCR:</strong> Used Tesseract plus a CLAHE + Otsu binarization pipeline to capture handwritten content from the workspace more reliably.</li>
+      <li><strong>System Feedback:</strong> Proposed a simple o3-style feedback panel so users could see what the system was doing without cluttering the canvas.</li>
+      <li><strong>Dynamic Generation:</strong> Used AI prompts to create timelines, maps, and summaries directly on the table so users could update content in real time.</li>
+      <li><strong>Calibration:</strong> Designed a startup calibration flow with fiducial tags to keep the projector and camera aligned.</li>
+    </ul>
+  </div>
+
+  <div class="image-row">
+    {img('image 45@2x.webp') && <Image src={img('image 45@2x.webp')} alt="Code editor with OCR pipeline" width={600} />}
+    {img('HandOCRview@2x.webp') && <Image src={img('HandOCRview@2x.webp')} alt="Hand tracking and OCR in action" width={600} />}
+  </div>
+</div>
+
+<style>
+  .spatial-technical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+    margin-bottom: var(--space-sm);
+  }
+
+  .text-block {
+    max-width: 65ch;
+  }
+
+  .bullet-list {
+    list-style: disc;
+    padding-left: 1.5rem;
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+  }
+
+  .bullet-list li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .bullet-list strong {
+    font-weight: 700;
+  }
+
+  .image-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .image-row img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .image-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

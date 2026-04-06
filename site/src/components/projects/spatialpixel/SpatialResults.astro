@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="spatial-results">
+  <div class="top-section">
+    <div class="text-col">
+      <p class="body-text">User testing and iteration led to a redesigned interface that made Procession feel more like a tool and less like a demo. We introduced a Spatial Library, a set of pre-built templates for brainstorming, mapping, and collaboration. The library let users share complete, ready-to-use modules, giving regular users a clear starting point and making the system easier to approach.</p>
+      <p class="body-text">To help users decide <em>what</em> to create rather than <em>how</em> to prompt, we mocked up a visualization feature. These transformed sketches and text into visual scenes instantly, helping teams explore variations, summarize ideas, and make decisions faster together.</p>
+    </div>
+    {img('image 44@2x.webp') && <div class="img-screenshot"><Image src={img('image 44@2x.webp')} alt="Spatial Library interface" width={800} /></div>}
+  </div>
+
+  <div class="bottom-row">
+    {img('image40 3@2x.webp') && <Image src={img('image40 3@2x.webp')} alt="Demo interaction 1" width={500} />}
+    {img('image42 2@2x.webp') && <Image src={img('image42 2@2x.webp')} alt="Demo interaction 2" width={500} />}
+    {img('image43 2@2x.webp') && <Image src={img('image43 2@2x.webp')} alt="Demo interaction 3" width={500} />}
+  </div>
+
+  <div class="demo-link">
+    <a href="https://youtu.be/bcZ-I_aZp5M?si=Zm9-E8V5GrGx-Z8r" target="_blank" rel="noopener noreferrer" class="demo-btn">Demo Video</a>
+  </div>
+</div>
+
+<style>
+  .spatial-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+    margin-bottom: var(--space-sm);
+  }
+
+  .top-section {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-md);
+    align-items: start;
+  }
+
+  .img-screenshot img {
+    width: 100%;
+    height: auto;
+  }
+
+  .bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .bottom-row img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .demo-link {
+    text-align: center;
+  }
+
+  .demo-btn {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border: 3px solid var(--color-text);
+    background: #eeff41;
+    color: var(--color-text);
+    text-decoration: underline;
+    transition: opacity 0.15s;
+  }
+
+  .demo-btn:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .top-section {
+      grid-template-columns: 1fr;
+    }
+
+    .bottom-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import HeroHome from '../components/HeroHome.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import TimelineSection from '../components/TimelineSection.astro';
+import ContactTeaser from '../components/ContactTeaser.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects.filter((p) => p.data.featured);
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{webp,png,jpg,jpeg,svg}',
+  { eager: true }
+);
+const imageMap: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(images)) {
+  imageMap[path] = mod.default;
+}
+---
+
+<Base>
+  <HeroHome />
+
+  <ProjectGrid projects={featuredProjects} images={imageMap}>
+    <h2 slot="header" class="section-heading">Featured Projects</h2>
+  </ProjectGrid>
+
+  <TimelineSection />
+  <ContactTeaser />
+</Base>
+
+<style>
+  .section-heading {
+    margin-bottom: var(--space-lg);
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Base title={`${title} — Matthew Rabin`}>
+  <article class="project-page">
+    <slot />
+  </article>
+</Base>
+
+<style>
+  .project-page {
+    padding-bottom: var(--space-xl);
+  }
+</style>

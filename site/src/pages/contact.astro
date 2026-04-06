@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+
+const linkedin = 'https://www.linkedin.com/in/matthew-rabin/';
+---
+
+<Base title="Contact — Matthew Rabin">
+  <section class="contact section">
+    <div class="container">
+      <h1 class="contact-heading">Contact</h1>
+      <p class="contact-intro">
+        Interested in working together or want to learn more about a project? Reach out directly.
+      </p>
+
+      <form name="contact" method="POST" data-netlify="true" class="contact-form">
+        <input type="hidden" name="form-name" value="contact" />
+        <label class="form-field">
+          <span class="form-label">Name</span>
+          <input type="text" name="name" required class="form-input" />
+        </label>
+        <label class="form-field">
+          <span class="form-label">Email</span>
+          <input type="email" name="email" required class="form-input" />
+        </label>
+        <label class="form-field">
+          <span class="form-label">Message</span>
+          <textarea name="message" rows={5} required class="form-input"></textarea>
+        </label>
+        <button type="submit" class="form-submit">Submit</button>
+      </form>
+
+      <div class="contact-links">
+        <a href={linkedin} target="_blank" rel="noopener noreferrer" class="contact-link">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-value">linkedin.com/in/matthew-rabin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-heading {
+    margin-bottom: var(--space-sm);
+  }
+
+  .contact-intro {
+    font-weight: 300;
+    font-size: 1.0625rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: var(--space-lg);
+    max-width: 32rem;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 32rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .form-input {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: 0.9375rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: transparent;
+    transition: border-color 0.15s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-text);
+  }
+
+  textarea.form-input {
+    resize: vertical;
+    min-height: 6rem;
+  }
+
+  .form-submit {
+    align-self: flex-start;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.6rem 1.5rem;
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: 1px solid var(--color-text);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .form-submit:hover {
+    opacity: 0.8;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .contact-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .contact-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .contact-value {
+    font-weight: 400;
+    font-size: 1rem;
+  }
+</style>

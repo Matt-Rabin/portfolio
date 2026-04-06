@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="spatial-concept">
+  <div class="text-row">
+    <p class="body-text">Our goal was to understand how people might use Procession in real work sessions. We expected users to struggle with <em>how</em> to engage with its functionality, but they actually struggled with <em>what</em> to prompt. Even informed participants used outside tools to decide what needed to be added to the canvas, rather than staying within the projected workspace.</p>
+    <p class="body-text">Because Procession already included a natural language interface, we focused on how AI could make that interaction more useful. We explored features that could visualize prompts, summarize content, and generate timelines directly on the table, helping users see and shape their ideas in real time.</p>
+  </div>
+
+  <div class="image-grid">
+    {img('image 51@2x.webp') && <div class="img-wide"><Image src={img('image 51@2x.webp')} alt="User testing session" width={500} /></div>}
+    {img('image 52@2x.webp') && <Image src={img('image 52@2x.webp')} alt="User reaction" width={350} />}
+    {img('image 47@2x.webp') && <Image src={img('image 47@2x.webp')} alt="Projected workspace" width={400} />}
+    {img('image 49@2x.webp') && <Image src={img('image 49@2x.webp')} alt="Visualization feature" width={400} />}
+  </div>
+
+  <div class="image-grid">
+    {img('image 53@2x-1.webp') && <Image src={img('image 53@2x-1.webp')} alt="Workspace overview" width={350} />}
+    {img('image 54@2x.webp') && <div class="img-wide"><Image src={img('image 54@2x.webp')} alt="Collaboration session" width={500} /></div>}
+    {img('image25 3@2x.webp') && <div class="img-wide"><Image src={img('image25 3@2x.webp')} alt="Team brainstorming" width={500} /></div>}
+    {img('image 48@2x.webp') && <Image src={img('image 48@2x.webp')} alt="Generated content" width={350} />}
+  </div>
+</div>
+
+<style>
+  .spatial-concept {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .text-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .image-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1024px) {
+    .image-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .text-row {
+      grid-template-columns: 1fr;
+    }
+
+    .image-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

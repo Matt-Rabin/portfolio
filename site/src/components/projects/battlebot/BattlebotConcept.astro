@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: Record<string, ImageMetadata>;
+  projectId: string;
+}
+
+const { images, projectId } = Astro.props;
+
+function img(filename: string) {
+  return images[`/src/assets/images/${projectId}/${filename}`];
+}
+---
+
+<div class="bb-concept">
+  <div class="text-row">
+    <p class="body-text">The project began with hand sketches exploring overall form, drive configuration, and attack strategies. We chose a low, forward-weighted chassis with a compact footprint and clear front interaction zone, establishing constraints around packaging and layout that guided subsequent prototypes.</p>
+    <p class="body-text">We used an early assembled platform to validate driving behavior, sensor placement, and control strategies before committing to the final enclosure.</p>
+  </div>
+
+  <div class="image-row-main">
+    {img('BBSketch@2x.webp') && <div class="img-sketch"><Image src={img('BBSketch@2x.webp')} alt="Battlebot concept sketch" width={700} /></div>}
+    {img('image 66@2x.webp') && <div class="img-proto"><Image src={img('image 66@2x.webp')} alt="Early prototype platform" width={600} /></div>}
+  </div>
+
+  <div class="bottom-row">
+    <p class="body-text">I designed, soldered, and assembled all custom perfboard electronics for power distribution, motor control, sensing, and system interconnects. The boards worked as intended on first integration and supported a stable final system architecture.</p>
+    <div class="pcb-images">
+      {img('image 59@2x.webp') && <Image src={img('image 59@2x.webp')} alt="Custom PCB front" width={350} />}
+      {img('image 60@2x.web') && <Image src={img('image 60@2x.web')} alt="Custom PCB back" width={350} />}
+      {img('image 61@2x.webpp') && <Image src={img('image 61@2x.webpp')} alt="PCB detail" width={350} />}
+    </div>
+  </div>
+</div>
+
+<style>
+  .bb-concept {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .body-text {
+    font-weight: 200;
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .text-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  .image-row-main {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .image-row-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .pcb-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .pcb-images img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .text-row,
+    .image-row-main,
+    .bottom-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

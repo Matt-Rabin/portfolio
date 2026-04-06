@@ -1,0 +1,44 @@
+---
+interface Props {
+  imageFiles: string[];
+  projectId: string;
+  images: Record<string, ImageMetadata>;
+  alt?: string;
+}
+
+import { Image } from 'astro:assets';
+
+const { imageFiles, projectId, images, alt = '' } = Astro.props;
+
+const resolved = imageFiles
+  .map((filename) => {
+    const key = `/src/assets/images/${projectId}/${filename}`;
+    return images[key] ? { src: images[key], filename } : null;
+  })
+  .filter(Boolean) as { src: ImageMetadata; filename: string }[];
+---
+
+{resolved.length > 0 && (
+  <div class="gallery">
+    {resolved.map((img) => (
+      <div class="gallery-item">
+        <Image src={img.src} alt={`${alt} — ${img.filename}`} width={800} />
+      </div>
+    ))}
+  </div>
+)}
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>

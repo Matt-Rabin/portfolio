@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{webp,png,jpg,jpeg,svg}',
+  { eager: true }
+);
+const imageMap: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(allImages)) {
+  imageMap[path] = mod.default;
+}
+
+// Extract only year and project-type tags for filtering
+const seasonYearRe = /^(Fall|Spring|Summer|Winter)\s+\d{4}$/;
+const typeTags = ['Individual Project', 'Group Project'];
+const filterTags = [
+  ...new Set(
+    allProjects.flatMap((p) =>
+      p.data.tags.filter(
+        (t: string) => seasonYearRe.test(t) || typeTags.includes(t)
+      )
+    )
+  ),
+];
+---
+
+<Base title="Projects — Matthew Rabin">
+  <section class="archive section">
+    <div class="container">
+      <h1 class="archive-heading">Projects</h1>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-tag="all">All</button>
+        {filterTags.map((tag) => (
+          <button class="filter-btn" data-tag={tag}>{tag}</button>
+        ))}
+      </div>
+
+      <div class="project-grid" id="project-grid">
+        {allProjects.map((project) => {
+          const heroKey = `/src/assets/images/${project.id}/${project.data.hero}`;
+          const heroImage = imageMap[heroKey];
+          return (
+            <div class="grid-item" data-tags={JSON.stringify(project.data.tags)}>
+              <ProjectCard
+                slug={project.id}
+                title={project.data.title}
+                subtitle={project.data.subtitle}
+                heroImage={heroImage}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items = document.querySelectorAll<HTMLElement>('.grid-item');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag!;
+
+      buttons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      items.forEach((item) => {
+        if (tag === 'all') {
+          item.style.display = '';
+        } else {
+          const tags: string[] = JSON.parse(item.dataset.tags || '[]');
+          item.style.display = tags.includes(tag) ? '' : 'none';
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .archive-heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+  }
+
+  .filter-btn {
+    font-family: var(--font-family);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-text);
+  }
+
+  .filter-btn.active {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 480px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
