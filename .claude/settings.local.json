@@ -20,7 +20,8 @@
       "Bash(xargs grep:*)",
       "Bash(find C:\\\\Users\\\\matth\\\\documents\\\\github\\\\portfolio\\\\site\\\\src\\\\components\\\\projects:*)",
       "Bash(npx sharp-cli:*)",
-      "Bash(node -e \"const sharp = require\\('sharp'\\); sharp\\('src/assets/images/2xImages/beautifully.png'\\).webp\\({quality: 100}\\).toFile\\('src/assets/images/2xImages/beautifully.webp'\\).then\\(\\(\\) => console.log\\('done'\\)\\)\")"
+      "Bash(node -e \"const sharp = require\\('sharp'\\); sharp\\('src/assets/images/2xImages/beautifully.png'\\).webp\\({quality: 100}\\).toFile\\('src/assets/images/2xImages/beautifully.webp'\\).then\\(\\(\\) => console.log\\('done'\\)\\)\")",
+      "Bash(node -e ':*)"
     ]
   }
 }

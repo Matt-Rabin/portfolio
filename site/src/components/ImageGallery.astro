@@ -22,7 +22,7 @@ const resolved = imageFiles
   <div class="gallery">
     {resolved.map((img) => (
       <div class="gallery-item">
-        <Image src={img.src} alt={`${alt} — ${img.filename}`} width={800} loading="lazy" />
+        <Image src={img.src} alt={`${alt} — ${img.filename}`} width={800} quality={100} loading="lazy" />
       </div>
     ))}
   </div>

@@ -13,7 +13,7 @@ const { slug, title, subtitle, heroImage } = Astro.props;
 
 <a href={`/projects/${slug}`} class="project-card">
   <div class="card-image">
-    <Image src={heroImage} alt={title} width={600} loading="lazy" />
+    <Image src={heroImage} alt={title} width={600} quality={100} loading="lazy" />
   </div>
   <div class="card-info">
     <h3 class="card-title">{title}</h3>
