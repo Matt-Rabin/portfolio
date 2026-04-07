@@ -25,8 +25,8 @@ function img(filename: string) {
   </div>
 
   <div class="image-row">
-    {img('image 45@2x.webp') && <Image src={img('image 45@2x.webp')} alt="Code editor with OCR pipeline" width={600} />}
-    {img('HandOCRview@2x.webp') && <Image src={img('HandOCRview@2x.webp')} alt="Hand tracking and OCR in action" width={600} />}
+    {img('image 45@2x.webp') && <Image loading="lazy" src={img('image 45@2x.webp')} alt="Code editor with OCR pipeline" width={600} />}
+    {img('HandOCRview@2x.webp') && <Image loading="lazy" src={img('HandOCRview@2x.webp')} alt="Hand tracking and OCR in action" width={600} />}
   </div>
 </div>
 

@@ -1,4 +1,20 @@
-import * as THREE from 'three';
+import {
+  Scene,
+  WebGLRenderer,
+  PerspectiveCamera,
+  HemisphereLight,
+  DirectionalLight,
+  Group,
+  Box3,
+  Vector3,
+  Material,
+  Mesh,
+  MeshStandardMaterial,
+  MeshPhysicalMaterial,
+  DoubleSide,
+  SRGBColorSpace,
+  MathUtils,
+} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 
@@ -19,29 +35,29 @@ export function initHeroModel() {
 
   const mountModel = async () => {
     try {
-      const scene = new THREE.Scene();
-      const renderer = new THREE.WebGLRenderer({
+      const scene = new Scene();
+      const renderer = new WebGLRenderer({
         alpha: true,
         antialias: true,
         powerPreference: 'high-performance',
       });
 
       renderer.setClearColor(0x000000, 0);
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.outputColorSpace = SRGBColorSpace;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       canvasHost.append(renderer.domElement);
 
-      const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+      const camera = new PerspectiveCamera(32, 1, 0.1, 100);
 
-      const ambientLight = new THREE.HemisphereLight(0xffffff, 0xd9d9d9, 2.2);
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
+      const ambientLight = new HemisphereLight(0xffffff, 0xd9d9d9, 2.2);
+      const keyLight = new DirectionalLight(0xffffff, 2.1);
       keyLight.position.set(3.2, 2.8, 5);
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1);
+      const rimLight = new DirectionalLight(0xffffff, 1);
       rimLight.position.set(-2.8, 1.4, -2.5);
 
       scene.add(ambientLight, keyLight, rimLight);
 
-      const group = new THREE.Group();
+      const group = new Group();
       scene.add(group);
 
       const loader = new GLTFLoader();
@@ -50,15 +66,15 @@ export function initHeroModel() {
       const loadedObject = gltf.scene;
 
       loadedObject.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          const applyMaterialFixes = (material: THREE.Material) => {
-            if (material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshPhysicalMaterial) {
-              material.side = THREE.DoubleSide;
+        if (child instanceof Mesh) {
+          const applyMaterialFixes = (material: Material) => {
+            if (material instanceof MeshStandardMaterial || material instanceof MeshPhysicalMaterial) {
+              material.side = DoubleSide;
               material.color.set(0xffffff);
               material.metalness = 0;
               material.roughness = 1;
               if (material.map) {
-                material.map.colorSpace = THREE.SRGBColorSpace;
+                material.map.colorSpace = SRGBColorSpace;
                 material.map.needsUpdate = true;
               }
               material.needsUpdate = true;
@@ -77,16 +93,16 @@ export function initHeroModel() {
         }
       });
 
-      const initialBox = new THREE.Box3().setFromObject(loadedObject);
-      const initialSize = initialBox.getSize(new THREE.Vector3());
+      const initialBox = new Box3().setFromObject(loadedObject);
+      const initialSize = initialBox.getSize(new Vector3());
       const maxAxis = Math.max(initialSize.x, initialSize.y, initialSize.z) || 1;
       const scale = 2.9 / maxAxis;
       loadedObject.scale.setScalar(scale);
       loadedObject.updateMatrixWorld(true);
 
-      const fittedBox = new THREE.Box3().setFromObject(loadedObject);
-      const fittedSize = fittedBox.getSize(new THREE.Vector3());
-      const fittedCenter = fittedBox.getCenter(new THREE.Vector3());
+      const fittedBox = new Box3().setFromObject(loadedObject);
+      const fittedSize = fittedBox.getSize(new Vector3());
+      const fittedCenter = fittedBox.getCenter(new Vector3());
       loadedObject.position.sub(fittedCenter);
       loadedObject.position.y -= fittedSize.y * 0.5;
       loadedObject.rotation.x = -Math.PI / 2;
@@ -99,9 +115,9 @@ export function initHeroModel() {
         camera.updateProjectionMatrix();
 
         const fitHeightDistance =
-          fittedSize.y / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+          fittedSize.y / (2 * Math.tan(MathUtils.degToRad(camera.fov / 2)));
         const fitWidthDistance =
-          fittedSize.x / (2 * camera.aspect * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+          fittedSize.x / (2 * camera.aspect * Math.tan(MathUtils.degToRad(camera.fov / 2)));
         const distance = 0.95 * Math.max(fitHeightDistance, fitWidthDistance, fittedSize.z);
 
         camera.position.set(0, fittedSize.y * 0.035, distance + fittedSize.z * 0.42);
@@ -213,7 +229,7 @@ export function initHeroModel() {
         renderer.dispose();
 
         loadedObject.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
+          if (child instanceof Mesh) {
             child.geometry.dispose();
             const childMaterial = child.material;
             if (Array.isArray(childMaterial)) {

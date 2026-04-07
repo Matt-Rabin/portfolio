@@ -16,12 +16,12 @@ function img(filename: string) {
 <div class="yama-result">
   <div class="top-section">
     <p class="body-text">The final deliverable was a comprehensive technical report supported by a fully detailed CAD engine assembly with integrated analysis. While most of my work focused on the crankshaft, I also contributed significantly to the case and valvetrain. The project emphasized designing with analysis from the outset, using early FEA to guide tradeoffs between strength, weight, and manufacturability. Working within a large team highlighted how tightly coupled mechanical decisions are in complex systems, where changes to one component propagate throughout the design.</p>
-    {img('image 5@2x.webp') && <div class="img-exploded"><Image src={img('image 5@2x.webp')} alt="Exploded CAD assembly" width={600} /></div>}
+    {img('image 5@2x.webp') && <div class="img-exploded"><Image loading="lazy" src={img('image 5@2x.webp')} alt="Exploded CAD assembly" width={600} /></div>}
   </div>
 
   {img('EngineWireframe 1@2x.webp') && (
     <div class="img-wireframe">
-      <Image src={img('EngineWireframe 1@2x.webp')} alt="Engine wireframe assembly" width={1000} />
+      <Image loading="lazy" src={img('EngineWireframe 1@2x.webp')} alt="Engine wireframe assembly" width={1000} />
     </div>
   )}
 </div>

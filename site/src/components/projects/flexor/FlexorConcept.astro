@@ -17,13 +17,13 @@ function img(filename: string) {
   <p class="body-text">The concept began with a tendon-driven finger inspired by biomechanical cable systems. I sketched, modeled, and printed early prototypes to test motion, tension routing, and ergonomics using off-the-shelf parts and basic 3D printing.</p>
 
   <div class="image-grid">
-    {img('Flexsketch@2x.webp') && <div class="img-sketch"><Image src={img('Flexsketch@2x.webp')} alt="Hand sketch of prosthetic concept" width={500} /></div>}
-    {img('FlexInitialRender@2x.webp') && <div class="img-render"><Image src={img('FlexInitialRender@2x.webp')} alt="Initial CAD render" width={500} /></div>}
+    {img('Flexsketch@2x.webp') && <div class="img-sketch"><Image loading="lazy" src={img('Flexsketch@2x.webp')} alt="Hand sketch of prosthetic concept" width={500} /></div>}
+    {img('FlexInitialRender@2x.webp') && <div class="img-render"><Image loading="lazy" src={img('FlexInitialRender@2x.webp')} alt="Initial CAD render" width={500} /></div>}
   </div>
 
   {img('FlexInitialModel@2x.webp') && (
     <div class="img-model">
-      <Image src={img('FlexInitialModel@2x.webp')} alt="Initial 3D printed model" width={600} />
+      <Image loading="lazy" src={img('FlexInitialModel@2x.webp')} alt="Initial 3D printed model" width={600} />
     </div>
   )}
 </div>

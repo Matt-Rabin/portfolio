@@ -17,17 +17,17 @@ function img(filename: string) {
   <div class="top-section">
     <p class="body-text">The final prototype introduced improved joint geometry, stronger materials, and a simplified cable path. Using nylon string and rubber band tensioning, the prosthetic achieved a natural bending motion that closely mirrored a real finger. The full assembly cost under one dollar per unit to fabricate. Testing confirmed reliable actuation and easy repair, validating the modular approach for low-cost accessibility.</p>
     <div class="renders">
-      {img('FlexTipRender@2x.webp') && <Image src={img('FlexTipRender@2x.webp')} alt="Tip joint render" width={300} />}
-      {img('FlexMiddleRender@2x.webp') && <Image src={img('FlexMiddleRender@2x.webp')} alt="Middle joint render" width={300} />}
-      {img('FlexBaseRender@2x.webp') && <Image src={img('FlexBaseRender@2x.webp')} alt="Base joint render" width={300} />}
-      {img('FlexFullRender@2x.webp') && <div class="full-render"><Image src={img('FlexFullRender@2x.webp')} alt="Full prosthetic render" width={500} /></div>}
+      {img('FlexTipRender@2x.webp') && <Image loading="lazy" src={img('FlexTipRender@2x.webp')} alt="Tip joint render" width={300} />}
+      {img('FlexMiddleRender@2x.webp') && <Image loading="lazy" src={img('FlexMiddleRender@2x.webp')} alt="Middle joint render" width={300} />}
+      {img('FlexBaseRender@2x.webp') && <Image loading="lazy" src={img('FlexBaseRender@2x.webp')} alt="Base joint render" width={300} />}
+      {img('FlexFullRender@2x.webp') && <div class="full-render"><Image loading="lazy" src={img('FlexFullRender@2x.webp')} alt="Full prosthetic render" width={500} /></div>}
     </div>
   </div>
 
   <div class="photo-row">
-    {img('FlexHandPhoto@2x.webp') && <Image src={img('FlexHandPhoto@2x.webp')} alt="Prosthetic on hand" width={400} />}
-    {img('FlexFinalPhoto1@2x.webp') && <Image src={img('FlexFinalPhoto1@2x.webp')} alt="Final prototype detail" width={400} />}
-    {img('FlexFinalPhoto2@2x.webp') && <Image src={img('FlexFinalPhoto2@2x.webp')} alt="Final prototype side view" width={400} />}
+    {img('FlexHandPhoto@2x.webp') && <Image loading="lazy" src={img('FlexHandPhoto@2x.webp')} alt="Prosthetic on hand" width={400} />}
+    {img('FlexFinalPhoto1@2x.webp') && <Image loading="lazy" src={img('FlexFinalPhoto1@2x.webp')} alt="Final prototype detail" width={400} />}
+    {img('FlexFinalPhoto2@2x.webp') && <Image loading="lazy" src={img('FlexFinalPhoto2@2x.webp')} alt="Final prototype side view" width={400} />}
   </div>
 </div>
 

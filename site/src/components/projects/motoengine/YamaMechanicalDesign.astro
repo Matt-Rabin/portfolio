@@ -19,12 +19,12 @@ function img(filename: string) {
       <p class="body-text">I served as the team's Design Specialist, focusing on the piston and crankshaft assemblies. I designed and detailed these components in CAD, resolving clearances, tolerances, and motion constraints across the full engine cycle.</p>
       <p class="body-text">Critical parts were validated using finite element analysis. Early stress failures in the piston head led to a redesigned geometry that reduced weight and improved safety factors under load.</p>
     </div>
-    {img('Crankshaft 1@2x.webp') && <div class="img-crankshaft"><Image src={img('Crankshaft 1@2x.webp')} alt="Crankshaft CAD render" width={700} /></div>}
+    {img('Crankshaft 1@2x.webp') && <div class="img-crankshaft"><Image loading="lazy" src={img('Crankshaft 1@2x.webp')} alt="Crankshaft CAD render" width={700} /></div>}
   </div>
 
   <div class="bottom-section">
-    {img('PistonFEA 1@2x.webp') && <div class="img-fea"><Image src={img('PistonFEA 1@2x.webp')} alt="Piston FEA analysis" width={500} /></div>}
-    {img('image 4@2x.webp') && <div class="img-drawing"><Image src={img('image 4@2x.webp')} alt="Technical drawings" width={700} /></div>}
+    {img('PistonFEA 1@2x.webp') && <div class="img-fea"><Image loading="lazy" src={img('PistonFEA 1@2x.webp')} alt="Piston FEA analysis" width={500} /></div>}
+    {img('image 4@2x.webp') && <div class="img-drawing"><Image loading="lazy" src={img('image 4@2x.webp')} alt="Technical drawings" width={700} /></div>}
   </div>
 </div>
 

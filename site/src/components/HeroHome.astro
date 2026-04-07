@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import heroImage from '../assets/images/2xImages/HomeAmbiHero.webp';
+import beautifullyImg from '../assets/images/2xImages/beautifully.webp';
 ---
 
 <section class="hero">
@@ -11,7 +12,7 @@ import heroImage from '../assets/images/2xImages/HomeAmbiHero.webp';
     <Image src={heroImage} alt="Ambi hero" width={2400} quality={100} />
   </div>
   <div class="container">
-    <p class="hero-statement"><span class="pill pill-engineer">Engineer</span> and <span class="pill pill-designer">Designer</span> specialized in designing <span class="highlight">products</span>, <span class="highlight">interfaces</span>, <span class="highlight">hardware</span> and <span class="highlight">robotics</span>, with a focus on making things that work <span class="highlight">beautifully</span>.</p>
+    <p class="hero-statement"><span class="pill pill-engineer">Engineer</span> and <span class="pill pill-designer">Designer</span> specialized in designing <span class="highlight">products</span>, <span class="highlight">interfaces</span>, <span class="highlight">hardware</span> and <span class="highlight">robotics</span>, with a focus on making things that work <Image src={beautifullyImg} alt="beautifully" width={800} quality={100} class="inline-word" />.</p>
   </div>
 </section>
 
@@ -67,5 +68,13 @@ import heroImage from '../assets/images/2xImages/HomeAmbiHero.webp';
 
   .hero-statement .highlight {
     color: #000000;
+  }
+
+  .hero-statement :global(.inline-word) {
+    display: inline-block;
+    vertical-align: middle;
+    height: 1.15em;
+    width: auto;
+    margin: 0 0.1em;
   }
 </style>

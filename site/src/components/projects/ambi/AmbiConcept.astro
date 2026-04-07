@@ -20,16 +20,16 @@ function img(filename: string) {
   </div>
 
   <div class="image-row-main">
-    {img('image 9@2x.webp') && <div class="img-sketch"><Image src={img('image 9@2x.webp')} alt="Early concept sketches" width={700} /></div>}
-    {img('image 53@2x.webp') && <div class="img-model"><Image src={img('image 53@2x.webp')} alt="First sketch model" width={700} /></div>}
+    {img('image 9@2x.webp') && <div class="img-sketch"><Image loading="lazy" src={img('image 9@2x.webp')} alt="Early concept sketches" width={700} /></div>}
+    {img('image 53@2x.webp') && <div class="img-model"><Image loading="lazy" src={img('image 53@2x.webp')} alt="First sketch model" width={700} /></div>}
   </div>
 
   <div class="bottom-row">
     <p class="body-text bottom-text">The concept later shifted to a smoother interaction; a single metal ball that snaps into magnetic divots, letting users choose and adjust sounds through that unique interface.</p>
     <div class="stage-images">
-      {img('Stage1 3.svg') && <Image src={img('Stage1 3.svg')} alt="Interaction stage 1" width={280} />}
-      {img('Stage2 3.svg') && <Image src={img('Stage2 3.svg')} alt="Interaction stage 2" width={280} />}
-      {img('Stage3_2 3.svg') && <Image src={img('Stage3_2 3.svg')} alt="Interaction stage 3" width={280} />}
+      {img('Stage1 3.svg') && <Image loading="lazy" src={img('Stage1 3.svg')} alt="Interaction stage 1" width={280} />}
+      {img('Stage2 3.svg') && <Image loading="lazy" src={img('Stage2 3.svg')} alt="Interaction stage 2" width={280} />}
+      {img('Stage3_2 3.svg') && <Image loading="lazy" src={img('Stage3_2 3.svg')} alt="Interaction stage 3" width={280} />}
     </div>
   </div>
 </div>

@@ -20,16 +20,16 @@ function img(filename: string) {
   </div>
 
   <div class="image-row-main">
-    {img('BBSketch@2x.webp') && <div class="img-sketch"><Image src={img('BBSketch@2x.webp')} alt="Battlebot concept sketch" width={700} /></div>}
-    {img('image 66@2x.webp') && <div class="img-proto"><Image src={img('image 66@2x.webp')} alt="Early prototype platform" width={600} /></div>}
+    {img('BBSketch@2x.webp') && <div class="img-sketch"><Image loading="lazy" src={img('BBSketch@2x.webp')} alt="Battlebot concept sketch" width={700} /></div>}
+    {img('image 66@2x.webp') && <div class="img-proto"><Image loading="lazy" src={img('image 66@2x.webp')} alt="Early prototype platform" width={600} /></div>}
   </div>
 
   <div class="bottom-row">
     <p class="body-text">I designed, soldered, and assembled all custom perfboard electronics for power distribution, motor control, sensing, and system interconnects. The boards worked as intended on first integration and supported a stable final system architecture.</p>
     <div class="pcb-images">
-      {img('image 59@2x.webp') && <Image src={img('image 59@2x.webp')} alt="Custom PCB front" width={350} />}
-      {img('image 60@2x.web') && <Image src={img('image 60@2x.web')} alt="Custom PCB back" width={350} />}
-      {img('image 61@2x.webpp') && <Image src={img('image 61@2x.webpp')} alt="PCB detail" width={350} />}
+      {img('image 59@2x.webp') && <Image loading="lazy" src={img('image 59@2x.webp')} alt="Custom PCB front" width={350} />}
+      {img('image 60@2x.web') && <Image loading="lazy" src={img('image 60@2x.web')} alt="Custom PCB back" width={350} />}
+      {img('image 61@2x.webpp') && <Image loading="lazy" src={img('image 61@2x.webpp')} alt="PCB detail" width={350} />}
     </div>
   </div>
 </div>
