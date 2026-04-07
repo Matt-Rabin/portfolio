@@ -5,6 +5,7 @@ subtitle: "Low-Cost Modular Finger Prosthetic"
 
 # Set to true to show on homepage, false to archive
 featured: true
+featured_order: 3
 
 # Your bottom metadata line e.g. ["Fall 2024", "Individual Project", "Design Processes"]
 tags: ["Spring 2022", "Individual Project", "Biomechanics", "Advisor: Dr. Akkus"]

@@ -64,7 +64,10 @@ const timelineEntries = [
         ))}
       </div>
 
-      <a href="/contact" class="resume-link">Resume &rarr;</a>
+      <div class="about-actions">
+        <a href="/contact" class="resume-link">Resume &rarr;</a>
+        <a href="/mrabinportfolio.pdf" target="_blank" rel="noopener noreferrer" class="resume-link">Portfolio &rarr;</a>
+      </div>
 
       <h2 class="about-subheading">Links</h2>
 
@@ -111,6 +114,12 @@ const timelineEntries = [
     margin-bottom: var(--space-lg);
   }
 
+  .about-actions {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
   .resume-link {
     display: inline-block;
     font-weight: 600;
@@ -118,7 +127,6 @@ const timelineEntries = [
     letter-spacing: 0.01em;
     border-bottom: 2px solid var(--color-text);
     padding-bottom: 0.15rem;
-    margin-bottom: var(--space-xl);
   }
 
   .timeline {

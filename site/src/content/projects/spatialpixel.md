@@ -5,6 +5,7 @@ subtitle: "AR/XR Design Client Project"
 
 # Set to true to show on homepage, false to archive
 featured: true
+featured_order: 2
 
 # Your bottom metadata line e.g. ["Fall 2024", "Individual Project", "Design Processes"]
 tags: [Spring 2025, Group Project, Hsin Wang, Steyn Knollema, Sofia Elamrani]

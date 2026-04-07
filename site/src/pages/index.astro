@@ -6,7 +6,9 @@ import ContactTeaser from '../components/ContactTeaser.astro';
 import { getCollection } from 'astro:content';
 
 const allProjects = await getCollection('projects');
-const featuredProjects = allProjects.filter((p) => p.data.featured);
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.featured_order - b.data.featured_order);
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/images/**/*.{webp,png,jpg,jpeg,svg}',

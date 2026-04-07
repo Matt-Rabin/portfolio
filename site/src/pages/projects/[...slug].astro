@@ -134,6 +134,20 @@ const projectOverrides = overrides[project.id] || {};
     />
   )}
 
+  {data.video_below_hero && (
+    <div class="video-below-hero container">
+      <div class="video-wrapper">
+        <iframe
+          src={data.video_below_hero}
+          title={data.title}
+          frameborder="0"
+          allow="encrypted-media"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  )}
+
   <div class="project-sections container">
     {visibleSections.map((section) => {
       const Override = projectOverrides[section.heading];
@@ -163,6 +177,21 @@ const projectOverrides = overrides[project.id] || {};
 </ProjectLayout>
 
 <style>
+  .video-below-hero {
+    margin-bottom: var(--space-lg);
+  }
+
+  .video-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   .generic-section {
     max-width: 100%;
   }

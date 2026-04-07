@@ -5,6 +5,7 @@ subtitle: "Nighttime Tactile Music Player"
 
 # Set to true to show on homepage, false to archive
 featured: true
+featured_order: 1
 
 # Your bottom metadata line e.g. ["Fall 2024", "Individual Project", "Design Processes"]
 tags: [Fall 2024, Individual Project, Design Processes]
@@ -23,6 +24,7 @@ appendix_images: []
 # Delete sections that don't apply
 # has_appendix controls whether the Technical Appendix tab shows
 has_appendix: false
+video_below_hero: "https://www.youtube.com/embed/H4_4Z1usGj8"
 
 ---
 

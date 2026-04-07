@@ -3,7 +3,20 @@ import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
-const allProjects = await getCollection('projects');
+const seasonOrder: Record<string, number> = { Spring: 0, Summer: 1, Fall: 2, Winter: 3 };
+const seasonYearRe = /^(Fall|Spring|Summer|Winter)\s+(\d{4})$/;
+
+function getDateScore(tags: string[]): number {
+  for (const t of tags) {
+    const m = seasonYearRe.exec(t);
+    if (m) return Number(m[2]) * 10 + (seasonOrder[m[1]] ?? 0);
+  }
+  return 0;
+}
+
+const allProjects = (await getCollection('projects')).sort(
+  (a, b) => getDateScore(b.data.tags) - getDateScore(a.data.tags)
+);
 
 const allImages = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/images/**/*.{webp,png,jpg,jpeg,svg}',
@@ -14,17 +27,7 @@ for (const [path, mod] of Object.entries(allImages)) {
   imageMap[path] = mod.default;
 }
 
-const seasonYearRe = /^(Fall|Spring|Summer|Winter)\s+\d{4}$/;
-const typeTags = ['Individual Project', 'Group Project'];
-const filterTags = [
-  ...new Set(
-    allProjects.flatMap((p) =>
-      p.data.tags.filter(
-        (t: string) => seasonYearRe.test(t) || typeTags.includes(t)
-      )
-    )
-  ),
-];
+const filterTags = ['Individual Project', 'Group Project'];
 ---
 
 <Base title="Work by Matthew Rabin">

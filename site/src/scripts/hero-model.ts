@@ -104,7 +104,7 @@ export function initHeroModel() {
       const fittedSize = fittedBox.getSize(new Vector3());
       const fittedCenter = fittedBox.getCenter(new Vector3());
       loadedObject.position.sub(fittedCenter);
-      loadedObject.position.y -= fittedSize.y * 0.5;
+      loadedObject.position.y -= fittedSize.y * 0.6;
       loadedObject.rotation.x = -Math.PI / 2;
       group.add(loadedObject);
 
@@ -185,8 +185,8 @@ export function initHeroModel() {
         const offsetX = (event.clientX - bounds.left) / bounds.width - 0.5;
         const offsetY = (event.clientY - bounds.top) / bounds.height - 0.5;
 
-        pointerOffsetX = offsetX * 0.62;
-        pointerOffsetY = -offsetY * 0.28;
+        pointerOffsetX = offsetX * 0.75;
+        pointerOffsetY = offsetY * 0.3;
       };
 
       const onPointerLeave = () => {
