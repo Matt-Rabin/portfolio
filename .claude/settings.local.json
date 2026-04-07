@@ -16,7 +16,8 @@
       "mcp__plugin_figma_figma__get_design_context",
       "mcp__plugin_figma_figma__get_metadata",
       "Bash(grep -oE '<frame id=\\\\\\\\\"[^\"]*\\\\\\\\\" name=\\\\\\\\\"[^\"]*\\\\\\\\\"')",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(xargs grep:*)"
     ]
   }
 }
