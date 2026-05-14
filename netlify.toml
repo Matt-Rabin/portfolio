@@ -2,3 +2,21 @@
   base = "site"
   command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "/mattslist"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/mattslist/*"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/sale/*"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true

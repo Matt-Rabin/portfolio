@@ -1,6 +1,6 @@
-import { c as createComponent } from './astro-component_DQj3exzX.mjs';
+import { c as createComponent } from './astro-component_D_p4jkZm.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_QxsibYLx.mjs';
+import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_CPTlrKnT.mjs';
 import 'clsx';
 import { g as getSaleConfig, i as isSaleSlug, c as createSupabaseServerClient } from './slug_ChKz0nzP.mjs';
 
