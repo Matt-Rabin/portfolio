@@ -6,8 +6,13 @@ import { getSaleConfig } from './sale/config';
 
 type CookieStore = APIContext['cookies'];
 
+function readServerEnv(name: string): string | undefined {
+  const value = process.env[name];
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
 function getProjectUrl(): string {
-  const value = import.meta.env.PUBLIC_SUPABASE_URL?.trim();
+  const value = readServerEnv('PUBLIC_SUPABASE_URL');
 
   if (!value) {
     throw new Error('Missing required environment variable: PUBLIC_SUPABASE_URL');
@@ -17,7 +22,7 @@ function getProjectUrl(): string {
 }
 
 function getPublishableKey(): string {
-  const value = import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim();
+  const value = readServerEnv('PUBLIC_SUPABASE_ANON_KEY');
 
   if (!value) {
     throw new Error('Missing required environment variable: PUBLIC_SUPABASE_ANON_KEY');
@@ -27,9 +32,7 @@ function getPublishableKey(): string {
 }
 
 function getServiceKey(): string {
-  const value =
-    import.meta.env.SUPABASE_SECRET_KEY?.trim() ||
-    import.meta.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const value = readServerEnv('SUPABASE_SECRET_KEY') || readServerEnv('SUPABASE_SERVICE_ROLE_KEY');
 
   if (!value) {
     throw new Error(

@@ -33,8 +33,9 @@ SUPABASE_SECRET_KEY=
 SALE_ROUTE_SLUG=
 SALE_ADMIN_EMAIL=
 SALE_VENMO_HANDLE=
-SALE_TITLE=mattslist
-SALE_TAGLINE=Moving Sale
+# Optional:
+# SALE_TITLE=
+# SALE_TAGLINE=
 ```
 
 Notes:
@@ -43,6 +44,8 @@ Notes:
   project currently uses.
 - `SALE_ADMIN_EMAIL` must match the email on the Supabase auth user who signs into the admin page.
 - `SALE_ROUTE_SLUG` is the hidden direct URL path segment. For your production setup, use `mattslist`.
+- `SALE_TITLE` and `SALE_TAGLINE` are optional overrides. If you omit them, the site already defaults
+  to `mattslist` and `Moving Sale`.
 
 ## Supabase Setup
 
