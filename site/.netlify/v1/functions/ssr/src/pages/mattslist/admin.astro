@@ -3,11 +3,13 @@ export const prerender = false;
 
 import SaleLayout from '../../layouts/SaleLayout.astro';
 import { getSaleConfig } from '../../lib/sale/config';
+import { getSaleAdminPath } from '../../lib/sale/paths';
 import { getSaleAdminUser } from '../../lib/supabase';
 import { getAdminSnapshot } from '../../lib/sale/repository';
 import { SALE_CATEGORIES, SALE_CONDITIONS, SALE_PICKUP_WINDOWS } from '../../lib/sale/types';
 
 const config = getSaleConfig();
+const adminPath = getSaleAdminPath();
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -52,6 +54,7 @@ const noticeMessages: Record<string, string> = {
         </div>
         {adminUser ? (
           <form class="sale-inline-form" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-out`}>
+            <input type="hidden" name="next" value={adminPath} />
             <button class="sale-button sale-button-secondary" type="submit">Sign out</button>
           </form>
         ) : null}
@@ -260,6 +263,7 @@ const noticeMessages: Record<string, string> = {
             data stays server-side until a verified admin session exists.
           </p>
           <form class="sale-form-grid" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-in`}>
+            <input type="hidden" name="next" value={adminPath} />
             <label class="sale-field">
               <span class="sale-label">Admin email</span>
               <input name="email" type="email" autocomplete="email" required placeholder={config.adminEmail} />

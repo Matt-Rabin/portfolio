@@ -3,6 +3,7 @@ export const prerender = false;
 
 import { createSupabaseServerClient } from '../../../lib/supabase';
 import { getSaleConfig } from '../../../lib/sale/config';
+import { getSaleAdminPath } from '../../../lib/sale/paths';
 
 const config = getSaleConfig();
 
@@ -13,7 +14,7 @@ if (config.routeSlug !== 'mattslist') {
 } else {
   const tokenHash = Astro.url.searchParams.get('token_hash');
   const type = Astro.url.searchParams.get('type');
-  const next = Astro.url.searchParams.get('next') || `/${config.routeSlug}/admin`;
+  const next = Astro.url.searchParams.get('next') || getSaleAdminPath();
 
   if (tokenHash && type) {
     const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);

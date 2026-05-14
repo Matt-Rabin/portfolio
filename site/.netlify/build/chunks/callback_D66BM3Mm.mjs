@@ -1,21 +1,24 @@
-import { c as createComponent } from './astro-component_D1Ilb5b_.mjs';
+import { c as createComponent } from './astro-component_C0Vpb81Q.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_Kw3I_afp.mjs';
+import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_CJW7FZDH.mjs';
 import 'clsx';
 import { g as getSaleConfig, c as createSupabaseServerClient } from './supabase_CgPIPyeq.mjs';
+import { g as getSaleAdminPath } from './paths_kYRNYCpp.mjs';
+import { i as isSaleSlug } from './slug_AhDwt_Lt.mjs';
 
 const prerender = false;
 const $$Callback = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);
   Astro2.self = $$Callback;
-  const config = getSaleConfig();
+  getSaleConfig();
+  const saleSlug = Astro2.params.saleSlug;
   Astro2.response.headers.set("Cache-Control", "no-store");
-  if (config.routeSlug !== "mattslist") {
+  if (!isSaleSlug(saleSlug)) {
     Astro2.response.status = 404;
   } else {
     const tokenHash = Astro2.url.searchParams.get("token_hash");
     const type = Astro2.url.searchParams.get("type");
-    const next = Astro2.url.searchParams.get("next") || `/${config.routeSlug}/admin`;
+    const next = Astro2.url.searchParams.get("next") || getSaleAdminPath();
     if (tokenHash && type) {
       const supabase = createSupabaseServerClient(Astro2.cookies, Astro2.request);
       await supabase.auth.verifyOtp({
@@ -26,10 +29,10 @@ const $$Callback = createComponent(async ($$result, $$props, $$slots) => {
     return Astro2.redirect(next);
   }
   return renderTemplate`<html lang="en"> ${maybeRenderHead()}<body>Redirecting…</body></html>`;
-}, "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/mattslist/auth/callback.astro", void 0);
+}, "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/[saleSlug]/auth/callback.astro", void 0);
 
-const $$file = "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/mattslist/auth/callback.astro";
-const $$url = "/mattslist/auth/callback";
+const $$file = "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/[saleSlug]/auth/callback.astro";
+const $$url = "/[saleSlug]/auth/callback";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,

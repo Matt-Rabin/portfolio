@@ -1,4 +1,5 @@
 import { g as getSaleConfig, c as createSupabaseServerClient } from './supabase_CgPIPyeq.mjs';
+import { g as getSaleAdminPath, a as getSaleAuthCallbackPath } from './paths_kYRNYCpp.mjs';
 import { i as isSaleSlug } from './slug_AhDwt_Lt.mjs';
 
 const prerender = false;
@@ -9,12 +10,13 @@ const POST = async ({ params, request, cookies }) => {
   const config = getSaleConfig();
   const formData = await request.formData();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const next = String(formData.get("next") ?? "").trim() || getSaleAdminPath();
   if (!email || email !== config.adminEmail) {
-    return Response.redirect(`/${config.routeSlug}/admin`, 303);
+    return Response.redirect(next, 303);
   }
   const origin = new URL(request.url).origin;
-  const callbackUrl = new URL(`/${config.routeSlug}/auth/callback`, origin);
-  callbackUrl.searchParams.set("next", `/${config.routeSlug}/admin`);
+  const callbackUrl = new URL(getSaleAuthCallbackPath(), origin);
+  callbackUrl.searchParams.set("next", next);
   const supabase = createSupabaseServerClient(cookies, request);
   await supabase.auth.signInWithOtp({
     email,
@@ -23,7 +25,7 @@ const POST = async ({ params, request, cookies }) => {
       emailRedirectTo: callbackUrl.toString()
     }
   });
-  return Response.redirect(`/${config.routeSlug}/admin?sent=1`, 303);
+  return Response.redirect(`${next}?sent=1`, 303);
 };
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
