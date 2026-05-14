@@ -1,0 +1,280 @@
+---
+export const prerender = false;
+
+import SaleLayout from '../../layouts/SaleLayout.astro';
+import { getSaleConfig } from '../../lib/sale/config';
+import { getSaleAdminUser } from '../../lib/supabase';
+import { getAdminSnapshot } from '../../lib/sale/repository';
+import { SALE_CATEGORIES, SALE_CONDITIONS, SALE_PICKUP_WINDOWS } from '../../lib/sale/types';
+
+const config = getSaleConfig();
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+if (config.routeSlug !== 'mattslist') {
+  Astro.response.status = 404;
+}
+
+const adminUser = config.routeSlug === 'mattslist' ? await getSaleAdminUser(Astro) : null;
+const notice = Astro.url.searchParams.get('notice');
+const signInSent = Astro.url.searchParams.get('sent') === '1';
+const snapshot = adminUser ? await getAdminSnapshot() : null;
+
+function formatPrice(cents: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
+  }).format(cents / 100);
+}
+
+function formatEditablePrice(cents: number) {
+  return (cents / 100).toFixed(cents % 100 === 0 ? 0 : 2);
+}
+
+const noticeMessages: Record<string, string> = {
+  'item-created': 'Listing created.',
+  'item-updated': 'Listing updated.',
+  'item-unclaimed': 'Listing returned to available inventory.',
+  'item-sold': 'Listing marked as sold.',
+  'item-archived': 'Listing archived.',
+  'signed-out': 'Signed out.',
+};
+---
+
+<SaleLayout title={`${config.title} admin | ${config.tagline}`} description="Protected moving sale admin.">
+  {config.routeSlug === 'mattslist' ? (
+    <div class="sale-admin-page">
+      <div class="sale-topbar sale-panel">
+        <div class="sale-brand">
+          <span class="sale-brand-title">{config.title} admin</span>
+          <span class="sale-brand-tagline">{config.routeSlug}</span>
+        </div>
+        {adminUser ? (
+          <form class="sale-inline-form" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-out`}>
+            <button class="sale-button sale-button-secondary" type="submit">Sign out</button>
+          </form>
+        ) : null}
+      </div>
+
+      {notice && noticeMessages[notice] ? (
+        <div class="sale-banner is-visible">{noticeMessages[notice]}</div>
+      ) : null}
+
+      {signInSent ? (
+        <div class="sale-banner is-visible">Magic link sent. Check your inbox and open it in this browser.</div>
+      ) : null}
+
+      {adminUser && snapshot ? (
+        <>
+          <section class="sale-admin-metrics">
+            <div class="sale-metric sale-panel">
+              <span class="sale-metric-label">Available</span>
+              <span class="sale-metric-value">{snapshot.availableCount}</span>
+            </div>
+            <div class="sale-metric sale-panel">
+              <span class="sale-metric-label">Claimed</span>
+              <span class="sale-metric-value">{snapshot.claimedCount}</span>
+            </div>
+            <div class="sale-metric sale-panel">
+              <span class="sale-metric-label">Sold</span>
+              <span class="sale-metric-value">{snapshot.soldCount}</span>
+            </div>
+            <div class="sale-metric sale-panel">
+              <span class="sale-metric-label">Expected revenue</span>
+              <span class="sale-metric-value">{formatPrice(snapshot.expectedRevenueCents)}</span>
+            </div>
+          </section>
+
+          <section class="sale-admin-grid">
+            <details class="sale-panel sale-admin-item" open>
+              <summary>
+                <div class="sale-admin-summary">
+                  <span class="sale-card-title">Add listing</span>
+                  <span class="sale-admin-subtle">Create a new item in the hidden sale inventory.</span>
+                </div>
+                <span class="sale-tag">New</span>
+              </summary>
+              <div class="sale-admin-item-body">
+                <form method="post" action={`/api/sale/${config.routeSlug}/admin/listings`}>
+                  <input type="hidden" name="intent" value="create" />
+                  <div class="sale-form-grid columns-2">
+                    <label class="sale-field">
+                      <span class="sale-label">Name</span>
+                      <input name="name" required />
+                    </label>
+                    <label class="sale-field">
+                      <span class="sale-label">Price</span>
+                      <input name="price" type="number" min="0" step="0.01" required />
+                    </label>
+                    <label class="sale-field">
+                      <span class="sale-label">Category</span>
+                      <select name="category">
+                        {SALE_CATEGORIES.map((category) => <option value={category}>{category}</option>)}
+                      </select>
+                    </label>
+                    <label class="sale-field">
+                      <span class="sale-label">Condition</span>
+                      <select name="condition">
+                        {SALE_CONDITIONS.map((condition) => <option value={condition}>{condition}</option>)}
+                      </select>
+                    </label>
+                    <label class="sale-field">
+                      <span class="sale-label">Pickup window</span>
+                      <select name="pickupWindow">
+                        {SALE_PICKUP_WINDOWS.map((pickupWindow) => (
+                          <option value={pickupWindow.id}>{pickupWindow.label}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label class="sale-field">
+                      <span class="sale-label">Image URL</span>
+                      <input name="imageUrl" type="url" placeholder="https://..." />
+                    </label>
+                    <label class="sale-field" style="grid-column: 1 / -1;">
+                      <span class="sale-label">Product URL</span>
+                      <input name="productUrl" type="url" placeholder="https://..." />
+                    </label>
+                    <label class="sale-field" style="grid-column: 1 / -1;">
+                      <span class="sale-label">Description</span>
+                      <textarea name="description" placeholder="Size, quirks, pickup notes, color, condition details."></textarea>
+                    </label>
+                  </div>
+                  <div class="sale-action-row" style="margin-top: 1rem;">
+                    <button class="sale-button sale-button-primary" type="submit">Create listing</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            {snapshot.listings.map((listing) => (
+              <details class="sale-panel sale-admin-item">
+                <summary>
+                  <div class="sale-admin-summary">
+                    <span class="sale-card-title">{listing.name}</span>
+                    <span class="sale-admin-subtle">
+                      {listing.category} · {SALE_PICKUP_WINDOWS.find((pickupWindow) => pickupWindow.id === listing.pickupWindow)?.label}
+                    </span>
+                  </div>
+                  <div class="sale-chip-row">
+                    <span class="sale-tag">{listing.status}</span>
+                    <span class="sale-tag">{formatPrice(listing.priceCents)}</span>
+                  </div>
+                </summary>
+                <div class="sale-admin-item-body">
+                  {listing.claim ? (
+                    <div class="sale-admin-claim" style="margin-bottom: 1rem;">
+                      <strong>{listing.claim.buyerName}</strong> · {listing.claim.buyerEmail}
+                      <br />
+                      <span class="sale-admin-subtle">
+                        {listing.claim.paymentMode === 'venmo_now' ? 'Venmo intent' : 'Pay later'}
+                        {listing.claim.buyerNote ? ` · ${listing.claim.buyerNote}` : ''}
+                      </span>
+                    </div>
+                  ) : null}
+
+                  <form method="post" action={`/api/sale/${config.routeSlug}/admin/listings/${listing.id}`}>
+                    <div class="sale-form-grid columns-2">
+                      <label class="sale-field">
+                        <span class="sale-label">Name</span>
+                        <input name="name" value={listing.name} required />
+                      </label>
+                      <label class="sale-field">
+                        <span class="sale-label">Price</span>
+                        <input name="price" type="number" min="0" step="0.01" value={formatEditablePrice(listing.priceCents)} required />
+                      </label>
+                      <label class="sale-field">
+                        <span class="sale-label">Category</span>
+                        <select name="category">
+                          {SALE_CATEGORIES.map((category) => (
+                            <option value={category} selected={category === listing.category}>{category}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label class="sale-field">
+                        <span class="sale-label">Condition</span>
+                        <select name="condition">
+                          {SALE_CONDITIONS.map((condition) => (
+                            <option value={condition} selected={condition === listing.condition}>{condition}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label class="sale-field">
+                        <span class="sale-label">Pickup window</span>
+                        <select name="pickupWindow">
+                          {SALE_PICKUP_WINDOWS.map((pickupWindow) => (
+                            <option value={pickupWindow.id} selected={pickupWindow.id === listing.pickupWindow}>
+                              {pickupWindow.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label class="sale-field">
+                        <span class="sale-label">Image URL</span>
+                        <input name="imageUrl" type="url" value={listing.imageUrl ?? ''} />
+                      </label>
+                      <label class="sale-field" style="grid-column: 1 / -1;">
+                        <span class="sale-label">Product URL</span>
+                        <input name="productUrl" type="url" value={listing.productUrl ?? ''} />
+                      </label>
+                      <label class="sale-field" style="grid-column: 1 / -1;">
+                        <span class="sale-label">Description</span>
+                        <textarea name="description">{listing.description}</textarea>
+                      </label>
+                    </div>
+
+                    <div class="sale-action-row" style="margin-top: 1rem;">
+                      <button class="sale-button sale-button-primary" name="intent" value="update" type="submit">
+                        Save changes
+                      </button>
+
+                      {listing.status !== 'available' ? (
+                        <button class="sale-button sale-button-secondary" name="intent" value="mark-available" type="submit">
+                          Reopen listing
+                        </button>
+                      ) : null}
+
+                      {listing.status !== 'sold' ? (
+                        <button class="sale-button sale-button-secondary" name="intent" value="mark-sold" type="submit">
+                          Mark sold
+                        </button>
+                      ) : null}
+
+                      {listing.status !== 'archived' ? (
+                        <button class="sale-button sale-button-danger" name="intent" value="archive" type="submit">
+                          Archive
+                        </button>
+                      ) : null}
+                    </div>
+                  </form>
+                </div>
+              </details>
+            ))}
+          </section>
+        </>
+      ) : (
+        <section class="sale-login-box sale-panel">
+          <h1 class="sale-card-title" style="margin-bottom: 0.5rem;">Admin access</h1>
+          <p class="sale-copy" style="margin-bottom: 1rem;">
+            Enter the configured admin email and Supabase will send a magic link. Buyer contact
+            data stays server-side until a verified admin session exists.
+          </p>
+          <form class="sale-form-grid" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-in`}>
+            <label class="sale-field">
+              <span class="sale-label">Admin email</span>
+              <input name="email" type="email" autocomplete="email" required placeholder={config.adminEmail} />
+            </label>
+            <button class="sale-button sale-button-primary" type="submit">Send magic link</button>
+          </form>
+        </section>
+      )}
+    </div>
+  ) : (
+    <div class="sale-admin-page">
+      <section class="sale-panel sale-hero">
+        <h1 class="sale-headline">Not found.</h1>
+        <p class="sale-copy">This admin route only exists for the configured hidden sale slug.</p>
+      </section>
+    </div>
+  )}
+</SaleLayout>
