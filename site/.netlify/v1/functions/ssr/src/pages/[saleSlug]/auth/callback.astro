@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+
+import { createSupabaseServerClient } from '../../../lib/supabase';
+import { getSaleConfig } from '../../../lib/sale/config';
+import { isSaleSlug } from '../../../lib/sale/slug';
+
+const config = getSaleConfig();
+const saleSlug = Astro.params.saleSlug;
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+if (!isSaleSlug(saleSlug)) {
+  Astro.response.status = 404;
+} else {
+  const tokenHash = Astro.url.searchParams.get('token_hash');
+  const type = Astro.url.searchParams.get('type');
+  const next = Astro.url.searchParams.get('next') || `/${config.routeSlug}/admin`;
+
+  if (tokenHash && type) {
+    const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
+    await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: type as
+        | 'signup'
+        | 'invite'
+        | 'magiclink'
+        | 'recovery'
+        | 'email_change'
+        | 'email',
+    });
+  }
+
+  return Astro.redirect(next);
+}
+---
+
+<html lang="en">
+  <body>Redirecting…</body>
+</html>

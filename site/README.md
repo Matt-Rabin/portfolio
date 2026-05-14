@@ -1,43 +1,80 @@
-# Astro Starter Kit: Minimal
+# Portfolio Site
+
+Astro portfolio with an unlinked moving-sale microsite backed by Supabase.
+
+## Commands
+
+Run all commands from `site/`:
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Hidden Sale Route
 
-## 🚀 Project Structure
+The sale page is served from a dynamic top-level route that only renders when the incoming slug
+matches `SALE_ROUTE_SLUG`. Nothing in the main portfolio nav or footer links to it.
 
-Inside of your Astro project, you'll see the following folders and files:
+- Public route: `/<SALE_ROUTE_SLUG>`
+- Admin route: `/<SALE_ROUTE_SLUG>/admin`
+- Public claim API: `/api/sale/<SALE_ROUTE_SLUG>/claim`
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Required Environment Variables
+
+Copy `.env.example` to `.env` locally, then fill in the values:
+
+```env
+PUBLIC_SUPABASE_URL=
+PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SECRET_KEY=
+SALE_ROUTE_SLUG=
+SALE_ADMIN_EMAIL=
+SALE_VENMO_HANDLE=
+SALE_TITLE=mattslist
+SALE_TAGLINE=Moving Sale
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Notes:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- `SUPABASE_SECRET_KEY` can be replaced with `SUPABASE_SERVICE_ROLE_KEY` if that is what your
+  project currently uses.
+- `SALE_ADMIN_EMAIL` must match the email on the Supabase auth user who signs into the admin page.
+- `SALE_ROUTE_SLUG` is the hidden direct URL path segment. For your production setup, use `mattslist`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Supabase Setup
 
-## 🧞 Commands
+Run the SQL in [supabase/sale-schema.sql](/C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/supabase/sale-schema.sql:1)
+against your Supabase project before using the sale route.
 
-All commands are run from the root of the project, from a terminal:
+If you use the Supabase CLI later, the same schema is also stored as a migration at
+[20260514_create_sale_tables.sql](/C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/supabase/migrations/20260514_create_sale_tables.sql:1).
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+That schema creates:
 
-## 👀 Want to learn more?
+- `sale_listings`
+- `sale_claims`
+- `claim_sale_listing(...)` for atomic first-claim-wins writes
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Secrets And Deployment
+
+Do not commit `.env` or any real keys to the repository.
+
+- `.env.example` is safe to commit because it contains placeholders only.
+- `PUBLIC_SUPABASE_ANON_KEY` is expected to be exposed to the browser.
+- `SUPABASE_SECRET_KEY` must exist only in your hosting provider's server-side environment settings.
+- Your hosting provider injects env vars during build/runtime; they do not need to live in the repo.
+
+Typical deployment flow:
+
+1. Keep real values only in local `.env` and in your host's environment-variable UI.
+2. Add the same variables in production on the host.
+3. Redeploy after adding them.
+4. Never paste `SUPABASE_SECRET_KEY` into source files, client scripts, markdown examples, or committed config.
+
+## Rendering Model
+
+The portfolio pages remain prerendered. The moving-sale pages and APIs opt into on-demand server
+rendering through `@astrojs/netlify`, which is required for real admin auth and protected claim data.

@@ -1,0 +1,236 @@
+---
+export const prerender = false;
+
+import SaleLayout from '../layouts/SaleLayout.astro';
+import { listPublicListings } from '../lib/sale/repository';
+import { getSaleConfig } from '../lib/sale/config';
+import { isSaleSlug } from '../lib/sale/slug';
+import { SALE_CATEGORIES, SALE_PICKUP_WINDOWS } from '../lib/sale/types';
+
+const config = getSaleConfig();
+const saleSlug = Astro.params.saleSlug;
+const validSale = isSaleSlug(saleSlug);
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+if (!validSale) {
+  Astro.response.status = 404;
+}
+
+const listings = validSale ? await listPublicListings() : [];
+const availableCount = listings.filter((listing) => listing.status === 'available').length;
+const unavailableCount = listings.filter((listing) => listing.status !== 'available').length;
+
+function formatPrice(cents: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
+  }).format(cents / 100);
+}
+
+const state = {
+  saleSlug: config.routeSlug,
+  venmoHandle: config.venmoHandle,
+  listings,
+};
+---
+
+<SaleLayout title={`${config.title} | ${config.tagline}`} description="Private moving sale listings.">
+  {validSale ? (
+    <div class="sale-page" data-sale-root>
+      <div class="sale-topbar sale-panel">
+        <div class="sale-brand">
+          <span class="sale-brand-title">{config.title}</span>
+          <span class="sale-brand-tagline">{config.tagline}</span>
+        </div>
+        <div class="sale-chip-row">
+          <span class="sale-chip is-active">{availableCount} available</span>
+          <span class="sale-chip">{unavailableCount} taken</span>
+        </div>
+      </div>
+
+      <div id="sale-banner" class="sale-banner" role="status" aria-live="polite"></div>
+
+      <section class="sale-hero sale-panel">
+        <div class="sale-hero-grid">
+          <div>
+            <h1 class="sale-headline">Everything must go before move-out.</h1>
+            <p class="sale-copy">
+              This page is intentionally unlisted. Claiming an item only asks for your name and
+              email, then I’ll follow up to coordinate pickup. Mobile buyers can jump directly into
+              Venmo; everyone else can claim now and settle later.
+            </p>
+          </div>
+          <div class="sale-stat-block">
+            <div class="sale-stat-card">
+              <span class="sale-stat-label">Pickup windows</span>
+              <span class="sale-stat-value">2</span>
+            </div>
+            <div class="sale-stat-card">
+              <span class="sale-stat-label">First claim wins</span>
+              <span class="sale-copy">Claims are confirmed server-side so two people can’t grab the same listing.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sale-pickup-grid">
+          {SALE_PICKUP_WINDOWS.map((pickupWindow) => {
+            const count = listings.filter(
+              (listing) =>
+                listing.pickupWindow === pickupWindow.id && listing.status === 'available',
+            ).length;
+
+            return (
+              <button
+                type="button"
+                class="sale-pickup-button"
+                data-pickup-filter={pickupWindow.id}
+                style={`--pickup-accent: ${pickupWindow.accent};`}
+              >
+                <div class="sale-pickup-meta">
+                  <div>
+                    <div class="sale-pickup-title">{pickupWindow.label}</div>
+                    <div class="sale-pickup-subtitle">{pickupWindow.sublabel}</div>
+                  </div>
+                  <div class="sale-pickup-count" style={`color: ${pickupWindow.accent};`}>{count}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div class="sale-filter-row">
+          <button type="button" class="sale-chip is-active" data-category-filter="All">All</button>
+          {SALE_CATEGORIES.map((category) => (
+            <button type="button" class="sale-chip" data-category-filter={category}>{category}</button>
+          ))}
+          <button
+            type="button"
+            class="sale-chip is-active"
+            data-availability-filter
+            style="margin-left: auto;"
+          >
+            Available only
+          </button>
+        </div>
+      </section>
+
+      <section class="sale-grid" data-sale-grid>
+        {listings.map((listing) => {
+          const pickupWindow = SALE_PICKUP_WINDOWS.find((window) => window.id === listing.pickupWindow)!;
+
+          return (
+            <article
+              class="sale-card sale-panel"
+              data-sale-card
+              data-listing-id={listing.id}
+              data-category={listing.category}
+              data-pickup={listing.pickupWindow}
+              data-status={listing.status}
+            >
+              {listing.imageUrl ? (
+                <img class="sale-card-image" src={listing.imageUrl} alt={listing.name} loading="lazy" />
+              ) : null}
+              <div class="sale-card-body">
+                <div class="sale-card-header">
+                  <div>
+                    <div class="sale-card-title">{listing.name}</div>
+                    <div class="sale-card-meta">{listing.category}</div>
+                  </div>
+                  <div class="sale-price">{formatPrice(listing.priceCents)}</div>
+                </div>
+
+                <p class="sale-description">{listing.description || 'No extra details yet.'}</p>
+
+                <div class="sale-tag-row">
+                  <span class="sale-tag">{listing.condition}</span>
+                  <span class="sale-tag" style={`border-color: ${pickupWindow.accent}40; color: ${pickupWindow.accent};`}>
+                    {pickupWindow.label}
+                  </span>
+                  {listing.status !== 'available' ? <span class="sale-tag">Unavailable</span> : null}
+                </div>
+
+                <div class="sale-action-row">
+                  {listing.status === 'available' ? (
+                    <button
+                      type="button"
+                      class="sale-button sale-button-primary"
+                      data-claim-button
+                      data-listing-id={listing.id}
+                    >
+                      Claim item
+                    </button>
+                  ) : (
+                    <span class="sale-tag">Already claimed</span>
+                  )}
+
+                  {listing.productUrl ? (
+                    <a class="sale-button sale-button-secondary" href={listing.productUrl} target="_blank" rel="noreferrer">
+                      Product link
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      <div class="sale-empty sale-panel" data-empty-state hidden>No items match the current filters.</div>
+
+      <div class="sale-modal-shell" id="sale-claim-modal" hidden>
+        <div class="sale-modal sale-panel" role="dialog" aria-modal="true" aria-labelledby="sale-claim-title">
+          <button type="button" class="sale-modal-close" data-close-modal aria-label="Close claim form">
+            ×
+          </button>
+          <img class="sale-modal-image" id="sale-claim-image" alt="" hidden />
+          <div class="sale-form-grid">
+            <div>
+              <div id="sale-claim-title" class="sale-card-title">Claim item</div>
+              <p class="sale-copy" id="sale-claim-summary"></p>
+            </div>
+
+            <div class="sale-form-grid columns-2">
+              <label class="sale-field">
+                <span class="sale-label">Your name</span>
+                <input id="sale-claim-name" name="name" autocomplete="name" required />
+              </label>
+              <label class="sale-field">
+                <span class="sale-label">Email</span>
+                <input id="sale-claim-email" name="email" type="email" autocomplete="email" required />
+              </label>
+            </div>
+
+            <label class="sale-field">
+              <span class="sale-label">Note</span>
+              <textarea id="sale-claim-note" name="note" placeholder="Pickup questions, timing, or message for me."></textarea>
+            </label>
+
+            <div class="sale-action-row">
+              <button type="button" class="sale-button sale-button-primary sale-button-full" id="sale-claim-submit">
+                Confirm claim
+              </button>
+              <button type="button" class="sale-button sale-button-primary sale-button-full" id="sale-claim-venmo" hidden>
+                Claim and open Venmo
+              </button>
+              <button type="button" class="sale-button sale-button-secondary sale-button-full" data-close-modal>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script type="application/json" id="sale-shop-data" set:html={JSON.stringify(state)}></script>
+      <script src="/sale-shop.js" defer></script>
+    </div>
+  ) : (
+    <div class="sale-page">
+      <section class="sale-panel sale-hero">
+        <h1 class="sale-headline">Not found.</h1>
+        <p class="sale-copy">This sale route is either disabled or the URL slug does not match the configured page.</p>
+      </section>
+    </div>
+  )}
+</SaleLayout>
