@@ -8,6 +8,7 @@ import { isSaleSlug } from '../../../lib/sale/slug';
 
 const config = getSaleConfig();
 const saleSlug = Astro.params.saleSlug;
+let callbackError: string | null = null;
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -15,27 +16,47 @@ if (!isSaleSlug(saleSlug)) {
   Astro.response.status = 404;
 } else {
   const tokenHash = Astro.url.searchParams.get('token_hash');
+  const code = Astro.url.searchParams.get('code');
   const type = Astro.url.searchParams.get('type');
   const next = Astro.url.searchParams.get('next') || getSaleAdminPath();
 
-  if (tokenHash && type) {
+  try {
     const supabase = createSupabaseServerClient(Astro.cookies, Astro.request);
-    await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type: type as
-        | 'signup'
-        | 'invite'
-        | 'magiclink'
-        | 'recovery'
-        | 'email_change'
-        | 'email',
-    });
-  }
 
-  return Astro.redirect(next);
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+      if (error) {
+        throw error;
+      }
+    } else if (tokenHash && type) {
+      const { error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type as
+          | 'signup'
+          | 'invite'
+          | 'magiclink'
+          | 'recovery'
+          | 'email_change'
+          | 'email',
+      });
+
+      if (error) {
+        throw error;
+      }
+    }
+
+    return Astro.redirect(next);
+  } catch (error) {
+    Astro.response.status = 500;
+    callbackError = error instanceof Error ? error.message : 'Unknown auth callback error';
+    console.error('Failed to complete sale auth callback.', error);
+  }
 }
 ---
 
 <html lang="en">
-  <body>Redirecting…</body>
+  <body>
+    {callbackError ? `Auth callback failed: ${callbackError}` : 'Redirecting...'}
+  </body>
 </html>

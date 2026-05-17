@@ -1,6 +1,6 @@
-import { c as createComponent } from './astro-component_BguUUyhl.mjs';
+import { c as createComponent } from './astro-component_nxZAq9te.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_C8hoiSj3.mjs';
+import { m as maybeRenderHead, r as renderTemplate } from './ssr-function_ti51K92L.mjs';
 import 'clsx';
 import { g as getSaleConfig, c as createSupabaseServerClient } from './supabase_D70iw1RZ.mjs';
 import { g as getSaleAdminPath } from './paths_DxXsHVXg.mjs';
@@ -10,23 +10,39 @@ const $$Callback = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);
   Astro2.self = $$Callback;
   const config = getSaleConfig();
+  let callbackError = null;
   Astro2.response.headers.set("Cache-Control", "no-store");
   if (config.routeSlug !== "mattslist") {
     Astro2.response.status = 404;
   } else {
     const tokenHash = Astro2.url.searchParams.get("token_hash");
+    const code = Astro2.url.searchParams.get("code");
     const type = Astro2.url.searchParams.get("type");
     const next = Astro2.url.searchParams.get("next") || getSaleAdminPath();
-    if (tokenHash && type) {
+    try {
       const supabase = createSupabaseServerClient(Astro2.cookies, Astro2.request);
-      await supabase.auth.verifyOtp({
-        token_hash: tokenHash,
-        type
-      });
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          throw error;
+        }
+      } else if (tokenHash && type) {
+        const { error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type
+        });
+        if (error) {
+          throw error;
+        }
+      }
+      return Astro2.redirect(next);
+    } catch (error) {
+      Astro2.response.status = 500;
+      callbackError = error instanceof Error ? error.message : "Unknown auth callback error";
+      console.error("Failed to complete mattslist auth callback.", error);
     }
-    return Astro2.redirect(next);
   }
-  return renderTemplate`<html lang="en"> ${maybeRenderHead()}<body>Redirecting…</body></html>`;
+  return renderTemplate`<html lang="en"> ${maybeRenderHead()}<body> ${callbackError ? `Auth callback failed: ${callbackError}` : "Redirecting..."} </body></html>`;
 }, "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/mattslist/auth/callback.astro", void 0);
 
 const $$file = "C:/Users/matth/OneDrive/Documents/GitHub/portfolio/site/src/pages/mattslist/auth/callback.astro";
