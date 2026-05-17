@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import type { APIContext } from 'astro';
+import { parse as parseCookieHeader } from 'cookie';
 
 import { getSaleConfig } from './sale/config';
 
@@ -44,11 +45,13 @@ function getServiceKey(): string {
 }
 
 export function createSupabaseServerClient(cookies: CookieStore, request: Request) {
+  const requestCookies = parseCookieHeader(request.headers.get('cookie') ?? '');
+
   return createServerClient(getProjectUrl(), getPublishableKey(), {
     request,
     cookies: {
       getAll() {
-        return cookies.getAll().map(({ name, value }) => ({ name, value }));
+        return Object.entries(requestCookies).map(([name, value]) => ({ name, value }));
       },
       setAll(cookiesToSet) {
         for (const { name, value, options } of cookiesToSet) {
