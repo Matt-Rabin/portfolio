@@ -31,7 +31,8 @@ PUBLIC_SUPABASE_URL=
 PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SECRET_KEY=
 SALE_ROUTE_SLUG=
-SALE_ADMIN_EMAIL=
+SALE_ADMIN_PASSWORD=
+# SALE_ADMIN_SESSION_SECRET=
 SALE_VENMO_HANDLE=
 # Optional:
 # SALE_TITLE=
@@ -42,7 +43,10 @@ Notes:
 
 - `SUPABASE_SECRET_KEY` can be replaced with `SUPABASE_SERVICE_ROLE_KEY` if that is what your
   project currently uses.
-- `SALE_ADMIN_EMAIL` must match the email on the Supabase auth user who signs into the admin page.
+- `SALE_ADMIN_PASSWORD` is the single admin password for the hidden sale page. It is checked
+  server-side and stored in an `HttpOnly` signed session cookie after login.
+- `SALE_ADMIN_SESSION_SECRET` is optional. If omitted, the app signs the admin session cookie
+  with `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`.
 - `SALE_ROUTE_SLUG` is the hidden direct URL path segment. For your production setup, use `mattslist`.
 - `SALE_TITLE` and `SALE_TAGLINE` are optional overrides. If you omit them, the site already defaults
   to `mattslist` and `Moving Sale`.
@@ -80,4 +84,5 @@ Typical deployment flow:
 ## Rendering Model
 
 The portfolio pages remain prerendered. The moving-sale pages and APIs opt into on-demand server
-rendering through `@astrojs/netlify`, which is required for real admin auth and protected claim data.
+rendering through `@astrojs/netlify`, which is required for the server-side admin password check,
+signed admin session cookie, and protected claim data.

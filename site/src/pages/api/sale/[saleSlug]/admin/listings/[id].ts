@@ -7,7 +7,7 @@ import {
   unclaimListing,
   updateListing,
 } from '../../../../../../lib/sale/repository';
-import { getSaleConfig } from '../../../../../../lib/sale/config';
+import { getSaleAdminPath } from '../../../../../../lib/sale/paths';
 import { redirectWithNotice } from '../../../../../../lib/sale/http';
 import { isSaleSlug } from '../../../../../../lib/sale/slug';
 
@@ -19,10 +19,10 @@ export const POST: APIRoute = async (context) => {
   }
 
   const authorized = await requireSaleAdmin(context);
-  const config = getSaleConfig();
+  const adminPath = getSaleAdminPath();
 
   if (!authorized) {
-    return Response.redirect(`/${config.routeSlug}/admin`, 303);
+    return Response.redirect(adminPath, 303);
   }
 
   const id = context.params.id;
@@ -36,22 +36,22 @@ export const POST: APIRoute = async (context) => {
 
   if (intent === 'update') {
     await updateListing(id, parseListingForm(formData));
-    return redirectWithNotice(`/${config.routeSlug}/admin`, 'item-updated');
+    return redirectWithNotice(adminPath, 'item-updated');
   }
 
   if (intent === 'mark-available') {
     await unclaimListing(id);
-    return redirectWithNotice(`/${config.routeSlug}/admin`, 'item-unclaimed');
+    return redirectWithNotice(adminPath, 'item-unclaimed');
   }
 
   if (intent === 'mark-sold') {
     await setListingStatus(id, 'sold');
-    return redirectWithNotice(`/${config.routeSlug}/admin`, 'item-sold');
+    return redirectWithNotice(adminPath, 'item-sold');
   }
 
   if (intent === 'archive') {
     await setListingStatus(id, 'archived');
-    return redirectWithNotice(`/${config.routeSlug}/admin`, 'item-archived');
+    return redirectWithNotice(adminPath, 'item-archived');
   }
 
   return new Response('Unsupported action', { status: 400 });

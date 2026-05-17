@@ -1,9 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
-import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { APIContext } from 'astro';
 import { parse as parseCookieHeader } from 'cookie';
-
-import { getSaleConfig } from './sale/config';
 
 type CookieStore = APIContext['cookies'];
 
@@ -69,24 +67,4 @@ export function createSupabaseAdminClient(): SupabaseClient {
       persistSession: false,
     },
   });
-}
-
-export async function getSaleAdminUser(context: APIContext): Promise<User | null> {
-  const supabase = createSupabaseServerClient(context.cookies, context.request);
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error) {
-    return null;
-  }
-
-  const config = getSaleConfig();
-
-  if (!user?.email || user.email.toLowerCase() !== config.adminEmail) {
-    return null;
-  }
-
-  return user;
 }

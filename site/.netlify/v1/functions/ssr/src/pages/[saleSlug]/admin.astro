@@ -2,15 +2,17 @@
 export const prerender = false;
 
 import SaleLayout from '../../layouts/SaleLayout.astro';
+import { requireSaleAdmin } from '../../lib/sale/admin';
 import { getSaleConfig } from '../../lib/sale/config';
+import { getSaleAdminPath } from '../../lib/sale/paths';
 import { isSaleSlug } from '../../lib/sale/slug';
-import { getSaleAdminUser } from '../../lib/supabase';
 import { getAdminSnapshot } from '../../lib/sale/repository';
 import { SALE_CATEGORIES, SALE_CONDITIONS, SALE_PICKUP_WINDOWS } from '../../lib/sale/types';
 
 const config = getSaleConfig();
 const saleSlug = Astro.params.saleSlug;
 const validSale = isSaleSlug(saleSlug);
+const adminPath = getSaleAdminPath();
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -18,9 +20,8 @@ if (!validSale) {
   Astro.response.status = 404;
 }
 
-const adminUser = validSale ? await getSaleAdminUser(Astro) : null;
+const adminUser = validSale ? await requireSaleAdmin(Astro) : false;
 const notice = Astro.url.searchParams.get('notice');
-const signInSent = Astro.url.searchParams.get('sent') === '1';
 const snapshot = adminUser ? await getAdminSnapshot() : null;
 
 function formatPrice(cents: number) {
@@ -42,6 +43,8 @@ const noticeMessages: Record<string, string> = {
   'item-sold': 'Listing marked as sold.',
   'item-archived': 'Listing archived.',
   'signed-out': 'Signed out.',
+  'signed-in': 'Signed in.',
+  'invalid-password': 'Incorrect password.',
 };
 ---
 
@@ -55,6 +58,7 @@ const noticeMessages: Record<string, string> = {
         </div>
         {adminUser ? (
           <form class="sale-inline-form" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-out`}>
+            <input type="hidden" name="next" value={adminPath} />
             <button class="sale-button sale-button-secondary" type="submit">Sign out</button>
           </form>
         ) : null}
@@ -62,10 +66,6 @@ const noticeMessages: Record<string, string> = {
 
       {notice && noticeMessages[notice] ? (
         <div class="sale-banner is-visible">{noticeMessages[notice]}</div>
-      ) : null}
-
-      {signInSent ? (
-        <div class="sale-banner is-visible">Magic link sent. Check your inbox and open it in this browser.</div>
       ) : null}
 
       {adminUser && snapshot ? (
@@ -259,15 +259,16 @@ const noticeMessages: Record<string, string> = {
         <section class="sale-login-box sale-panel">
           <h1 class="sale-card-title" style="margin-bottom: 0.5rem;">Admin access</h1>
           <p class="sale-copy" style="margin-bottom: 1rem;">
-            Enter the configured admin email and Supabase will send a magic link. Buyer contact
-            data stays server-side until a verified admin session exists.
+            Enter the admin password to unlock listing management. The password is checked
+            server-side and the session stays in an HttpOnly cookie.
           </p>
           <form class="sale-form-grid" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-in`}>
+            <input type="hidden" name="next" value={adminPath} />
             <label class="sale-field">
-              <span class="sale-label">Admin email</span>
-              <input name="email" type="email" autocomplete="email" required placeholder={config.adminEmail} />
+              <span class="sale-label">Admin password</span>
+              <input name="password" type="password" autocomplete="current-password" required />
             </label>
-            <button class="sale-button sale-button-primary" type="submit">Send magic link</button>
+            <button class="sale-button sale-button-primary" type="submit">Sign in</button>
           </form>
         </section>
       )}

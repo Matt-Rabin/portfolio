@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { requireSaleAdmin } from '../../../../../lib/sale/admin';
 import { parseListingForm } from '../../../../../lib/sale/forms';
 import { createListing, getAdminSnapshot } from '../../../../../lib/sale/repository';
-import { getSaleConfig } from '../../../../../lib/sale/config';
+import { getSaleAdminPath } from '../../../../../lib/sale/paths';
 import { jsonResponse, redirectWithNotice } from '../../../../../lib/sale/http';
 import { isSaleSlug } from '../../../../../lib/sale/slug';
 
@@ -30,10 +30,10 @@ export const POST: APIRoute = async (context) => {
   }
 
   const authorized = await requireSaleAdmin(context);
-  const config = getSaleConfig();
+  const adminPath = getSaleAdminPath();
 
   if (!authorized) {
-    return Response.redirect(`/${config.routeSlug}/admin`, 303);
+    return Response.redirect(adminPath, 303);
   }
 
   const formData = await context.request.formData();
@@ -46,5 +46,5 @@ export const POST: APIRoute = async (context) => {
   const input = parseListingForm(formData);
   await createListing(input);
 
-  return redirectWithNotice(`/${config.routeSlug}/admin`, 'item-created');
+  return redirectWithNotice(adminPath, 'item-created');
 };

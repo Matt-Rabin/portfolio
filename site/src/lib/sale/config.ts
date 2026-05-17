@@ -13,7 +13,6 @@ function readEnv(name: string): string {
 export function getSaleConfig(): SaleConfig {
   return {
     routeSlug: readEnv('SALE_ROUTE_SLUG'),
-    adminEmail: readEnv('SALE_ADMIN_EMAIL').toLowerCase(),
     venmoHandle: process.env.SALE_VENMO_HANDLE?.trim() || null,
     title: process.env.SALE_TITLE?.trim() || 'mattslist',
     tagline: process.env.SALE_TAGLINE?.trim() || 'Moving Sale',

@@ -74,7 +74,6 @@ export interface SaleSnapshot {
 
 export interface SaleConfig {
   routeSlug: string;
-  adminEmail: string;
   venmoHandle: string | null;
   title: string;
   tagline: string;
