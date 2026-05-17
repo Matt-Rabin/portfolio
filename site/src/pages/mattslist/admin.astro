@@ -17,10 +17,23 @@ if (config.routeSlug !== 'mattslist') {
   Astro.response.status = 404;
 }
 
-const adminUser = config.routeSlug === 'mattslist' ? await getSaleAdminUser(Astro) : null;
+let adminUser = null;
+let snapshot = null;
+let adminError: string | null = null;
+
+if (config.routeSlug === 'mattslist') {
+  try {
+    adminUser = await getSaleAdminUser(Astro);
+    snapshot = adminUser ? await getAdminSnapshot() : null;
+  } catch (error) {
+    Astro.response.status = 500;
+    adminError = error instanceof Error ? error.message : 'Unknown admin render error';
+    console.error('Failed to render mattslist admin page.', error);
+  }
+}
+
 const notice = Astro.url.searchParams.get('notice');
 const signInSent = Astro.url.searchParams.get('sent') === '1';
-const snapshot = adminUser ? await getAdminSnapshot() : null;
 
 function formatPrice(cents: number) {
   return new Intl.NumberFormat('en-US', {
@@ -68,7 +81,20 @@ const noticeMessages: Record<string, string> = {
         <div class="sale-banner is-visible">Magic link sent. Check your inbox and open it in this browser.</div>
       ) : null}
 
-      {adminUser && snapshot ? (
+      {adminError ? (
+        <section class="sale-login-box sale-panel">
+          <h1 class="sale-card-title" style="margin-bottom: 0.5rem;">Admin page failed to load</h1>
+          <p class="sale-copy" style="margin-bottom: 1rem;">
+            The route is resolving, but the server hit an error while rendering this page.
+          </p>
+          <div class="sale-banner is-visible is-error">
+            <strong>Server message:</strong> {adminError}
+          </div>
+          <p class="sale-copy" style="margin-top: 1rem;">
+            If this persists, check the Netlify function log for the request to <code>{adminPath}</code>.
+          </p>
+        </section>
+      ) : adminUser && snapshot ? (
         <>
           <section class="sale-admin-metrics">
             <div class="sale-metric sale-panel">

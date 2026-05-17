@@ -1,7 +1,7 @@
-import { c as createComponent } from './astro-component_C0Vpb81Q.mjs';
+import { c as createComponent } from './astro-component_BdmPpgzo.mjs';
 import 'piccolore';
-import { i as renderComponent, r as renderTemplate } from './ssr-function_CJW7FZDH.mjs';
-import { $ as $$Admin } from './admin_BifoGS_L.mjs';
+import { i as renderComponent, r as renderTemplate } from './ssr-function_cd-QOX5g.mjs';
+import { $ as $$Admin } from './admin_BP28dm0u.mjs';
 
 const prerender = false;
 const $$MattslistAdmin = createComponent(($$result, $$props, $$slots) => {
