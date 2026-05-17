@@ -7,6 +7,16 @@ import { createSupabaseServerClient } from '../../../../../lib/supabase';
 
 export const prerender = false;
 
+function redirectWithCookies(cookies: APIRoute['cookies'], location: string) {
+  const response = Response.redirect(location, 303);
+
+  for (const headerValue of cookies.consume()) {
+    response.headers.append('set-cookie', headerValue);
+  }
+
+  return response;
+}
+
 export const POST: APIRoute = async ({ params, request, cookies }) => {
   if (!isSaleSlug(params.saleSlug)) {
     return new Response('Not found', { status: 404 });
@@ -19,5 +29,5 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   const supabase = createSupabaseServerClient(cookies, request);
   await supabase.auth.signOut();
 
-  return Response.redirect(next, 303);
+  return redirectWithCookies(cookies, next);
 };
