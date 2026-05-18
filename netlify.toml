@@ -34,7 +34,13 @@
   force = true
 
 [[redirects]]
-  from = "/api/mattslist-admin/*"
+  from = "/mattslist-login"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/mattslist-logout"
   to = "/.netlify/functions/ssr"
   status = 200
   force = true
