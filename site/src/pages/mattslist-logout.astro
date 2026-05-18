@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+
+import { handleSaleAdminSignOut } from '../lib/sale/auth';
+import { getSaleConfig } from '../lib/sale/config';
+import { getSaleAdminPath, getSaleAdminSignOutPath } from '../lib/sale/paths';
+
+if (Astro.request.method === 'POST') {
+  return await handleSaleAdminSignOut(Astro, 'mattslist');
+}
+
+const config = getSaleConfig();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mattslist logout diagnostics</title>
+    <style>
+      body { background:#0d0d0d; color:#e8e8e0; font:16px/1.5 Inter, system-ui, sans-serif; padding:32px; }
+      code, pre { font:14px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+      .panel { max-width:860px; margin:0 auto; background:#141414; border:1px solid #252525; border-radius:16px; padding:24px; }
+      h1 { margin:0 0 12px; font-size:24px; }
+      p { color:#aaa; }
+      pre { white-space:pre-wrap; background:#101010; padding:16px; border-radius:12px; border:1px solid #1e1e1e; }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h1>mattslist logout diagnostics</h1>
+      <p>This route is reachable. The sign-out form should POST here, not navigate here with GET.</p>
+      <pre>{JSON.stringify(
+        {
+          method: Astro.request.method,
+          requestPath: Astro.url.pathname,
+          configuredSlug: config.routeSlug,
+          adminPath: getSaleAdminPath(),
+          signOutPath: getSaleAdminSignOutPath(),
+          query: Object.fromEntries(Astro.url.searchParams.entries()),
+        },
+        null,
+        2,
+      )}</pre>
+    </div>
+  </body>
+</html>
