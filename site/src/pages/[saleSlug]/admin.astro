@@ -4,7 +4,11 @@ export const prerender = false;
 import SaleLayout from '../../layouts/SaleLayout.astro';
 import { requireSaleAdmin } from '../../lib/sale/admin';
 import { getSaleConfig } from '../../lib/sale/config';
-import { getSaleAdminPath } from '../../lib/sale/paths';
+import {
+  getSaleAdminPath,
+  getSaleAdminSignInPath,
+  getSaleAdminSignOutPath,
+} from '../../lib/sale/paths';
 import { isSaleSlug } from '../../lib/sale/slug';
 import { getAdminSnapshot } from '../../lib/sale/repository';
 import { SALE_CATEGORIES, SALE_CONDITIONS, SALE_PICKUP_WINDOWS } from '../../lib/sale/types';
@@ -13,6 +17,8 @@ const config = getSaleConfig();
 const saleSlug = Astro.params.saleSlug;
 const validSale = isSaleSlug(saleSlug);
 const adminPath = getSaleAdminPath();
+const signInPath = getSaleAdminSignInPath();
+const signOutPath = getSaleAdminSignOutPath();
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -57,7 +63,7 @@ const noticeMessages: Record<string, string> = {
           <span class="sale-brand-tagline">{config.routeSlug}</span>
         </div>
         {adminUser ? (
-          <form class="sale-inline-form" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-out`}>
+          <form class="sale-inline-form" method="post" action={signOutPath}>
             <input type="hidden" name="next" value={adminPath} />
             <button class="sale-button sale-button-secondary" type="submit">Sign out</button>
           </form>
@@ -262,7 +268,7 @@ const noticeMessages: Record<string, string> = {
             Enter the admin password to unlock listing management. The password is checked
             server-side and the session stays in an HttpOnly cookie.
           </p>
-          <form class="sale-form-grid" method="post" action={`/api/sale/${config.routeSlug}/auth/sign-in`}>
+          <form class="sale-form-grid" method="post" action={signInPath}>
             <input type="hidden" name="next" value={adminPath} />
             <label class="sale-field">
               <span class="sale-label">Admin password</span>

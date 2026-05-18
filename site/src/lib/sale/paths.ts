@@ -15,3 +15,17 @@ export function getSaleAuthCallbackPath(): string {
     ? '/mattslist-auth/callback'
     : `/${config.routeSlug}/auth/callback`;
 }
+
+export function getSaleAdminSignInPath(): string {
+  const config = getSaleConfig();
+  return config.routeSlug === 'mattslist'
+    ? '/api/mattslist-admin/sign-in'
+    : `/api/sale/${config.routeSlug}/auth/sign-in`;
+}
+
+export function getSaleAdminSignOutPath(): string {
+  const config = getSaleConfig();
+  return config.routeSlug === 'mattslist'
+    ? '/api/mattslist-admin/sign-out'
+    : `/api/sale/${config.routeSlug}/auth/sign-out`;
+}

@@ -32,3 +32,9 @@
   to = "/.netlify/functions/ssr"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/api/mattslist-admin/*"
+  to = "/.netlify/functions/ssr"
+  status = 200
+  force = true
