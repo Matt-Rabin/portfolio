@@ -1,15 +1,11 @@
-import type { APIRoute } from 'astro';
+import { a as handleSaleAdminSignOut } from './auth_V0Kid9hT.mjs';
+import { g as getSaleConfig } from './config_BSMUbtlk.mjs';
+import { b as getSaleAdminSignOutPath, g as getSaleAdminPath } from './paths_BzNPkTRy.mjs';
 
-import { handleSaleAdminSignOut } from '../lib/sale/auth';
-import { getSaleConfig } from '../lib/sale/config';
-import { getSaleAdminPath, getSaleAdminSignOutPath } from '../lib/sale/paths';
-
-export const prerender = false;
-
-export const GET: APIRoute = async ({ request }) => {
+const prerender = false;
+const GET = async ({ request }) => {
   const config = getSaleConfig();
   const url = new URL(request.url);
-
   return new Response(
     `<!doctype html>
 <html lang="en">
@@ -31,27 +27,37 @@ export const GET: APIRoute = async ({ request }) => {
       <h1>mattslist logout diagnostics</h1>
       <p>This route is reachable. The sign-out form should POST here, not navigate here with GET.</p>
       <pre>${JSON.stringify(
-        {
-          method: request.method,
-          requestPath: url.pathname,
-          configuredSlug: config.routeSlug,
-          adminPath: getSaleAdminPath(),
-          signOutPath: getSaleAdminSignOutPath(),
-          query: Object.fromEntries(url.searchParams.entries()),
-        },
-        null,
-        2,
-      )}</pre>
+      {
+        method: request.method,
+        requestPath: url.pathname,
+        configuredSlug: config.routeSlug,
+        adminPath: getSaleAdminPath(),
+        signOutPath: getSaleAdminSignOutPath(),
+        query: Object.fromEntries(url.searchParams.entries())
+      },
+      null,
+      2
+    )}</pre>
     </div>
   </body>
 </html>`,
     {
       headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'no-store',
-      },
-    },
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
+    }
   );
 };
+const POST = async (context) => handleSaleAdminSignOut(context, "mattslist");
 
-export const POST: APIRoute = async (context) => handleSaleAdminSignOut(context, 'mattslist');
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  GET,
+  POST,
+  prerender
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

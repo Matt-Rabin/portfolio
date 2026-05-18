@@ -7,6 +7,7 @@ import {
 } from './admin';
 import { getSaleAdminPath } from './paths';
 import { isSaleSlug } from './slug';
+import { getSaleConfig } from './config';
 
 export function redirectWithCookies(cookies: APIContext['cookies'], location: string) {
   const response = Response.redirect(location, 303);
@@ -18,17 +19,34 @@ export function redirectWithCookies(cookies: APIContext['cookies'], location: st
   return response;
 }
 
+function withError(basePath: string, notice: string, error: string): string {
+  const url = new URL(basePath, 'https://sale.local');
+  url.searchParams.set('notice', notice);
+  url.searchParams.set('error', error);
+  return `${url.pathname}${url.search}`;
+}
+
 export async function handleSaleAdminSignIn(
   context: APIContext,
   routeSlug: string | undefined,
 ): Promise<Response> {
+  const nextFallback = getSaleAdminPath();
+
   if (!isSaleSlug(routeSlug)) {
-    return new Response('Not found', { status: 404 });
+    const config = getSaleConfig();
+    return redirectWithCookies(
+      context.cookies,
+      withError(
+        nextFallback,
+        'sign-in-error',
+        `slug mismatch: route=${routeSlug ?? 'missing'} env=${config.routeSlug}`,
+      ),
+    );
   }
 
   const formData = await context.request.formData();
   const password = String(formData.get('password') ?? '');
-  const next = String(formData.get('next') ?? '').trim() || getSaleAdminPath();
+  const next = String(formData.get('next') ?? '').trim() || nextFallback;
 
   try {
     if (!verifySaleAdminPassword(password)) {
@@ -39,7 +57,14 @@ export async function handleSaleAdminSignIn(
     return redirectWithCookies(context.cookies, `${next}?notice=signed-in`);
   } catch (error) {
     console.error('Failed to sign into sale admin.', error);
-    return redirectWithCookies(context.cookies, `${next}?notice=invalid-password`);
+    return redirectWithCookies(
+      context.cookies,
+      withError(
+        next,
+        'sign-in-error',
+        error instanceof Error ? error.message : 'unknown sign-in error',
+      ),
+    );
   }
 }
 
@@ -47,13 +72,22 @@ export async function handleSaleAdminSignOut(
   context: APIContext,
   routeSlug: string | undefined,
 ): Promise<Response> {
+  const nextFallback = `${getSaleAdminPath()}?notice=signed-out`;
+
   if (!isSaleSlug(routeSlug)) {
-    return new Response('Not found', { status: 404 });
+    const config = getSaleConfig();
+    return redirectWithCookies(
+      context.cookies,
+      withError(
+        getSaleAdminPath(),
+        'sign-out-error',
+        `slug mismatch: route=${routeSlug ?? 'missing'} env=${config.routeSlug}`,
+      ),
+    );
   }
 
   const formData = await context.request.formData().catch(() => null);
-  const next =
-    String(formData?.get('next') ?? '').trim() || `${getSaleAdminPath()}?notice=signed-out`;
+  const next = String(formData?.get('next') ?? '').trim() || nextFallback;
 
   clearSaleAdminSession(context);
   return redirectWithCookies(context.cookies, next);

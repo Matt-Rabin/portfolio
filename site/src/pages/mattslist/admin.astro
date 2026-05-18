@@ -39,6 +39,7 @@ if (config.routeSlug === 'mattslist') {
 }
 
 const notice = Astro.url.searchParams.get('notice');
+const errorDetail = Astro.url.searchParams.get('error');
 
 function formatPrice(cents: number) {
   return new Intl.NumberFormat('en-US', {
@@ -61,6 +62,8 @@ const noticeMessages: Record<string, string> = {
   'signed-out': 'Signed out.',
   'signed-in': 'Signed in.',
   'invalid-password': 'Incorrect password.',
+  'sign-in-error': 'Sign-in failed before the admin session could be created.',
+  'sign-out-error': 'Sign-out failed.',
 };
 ---
 
@@ -81,7 +84,15 @@ const noticeMessages: Record<string, string> = {
       </div>
 
       {notice && noticeMessages[notice] ? (
-        <div class="sale-banner is-visible">{noticeMessages[notice]}</div>
+        <div class={`sale-banner is-visible ${notice.endsWith('error') ? 'is-error' : ''}`}>
+          {noticeMessages[notice]}
+          {errorDetail ? (
+            <>
+              <br />
+              <strong>Details:</strong> {errorDetail}
+            </>
+          ) : null}
+        </div>
       ) : null}
 
       {adminError ? (
@@ -291,6 +302,18 @@ const noticeMessages: Record<string, string> = {
             Enter the admin password to unlock listing management. The password is checked
             server-side and the session stays in an HttpOnly cookie.
           </p>
+          <details class="sale-panel" style="padding: 1rem; margin-bottom: 1rem;">
+            <summary class="sale-card-title" style="cursor: pointer;">Debug info</summary>
+            <div class="sale-copy" style="margin-top: 0.75rem;">
+              <div><strong>Current URL:</strong> {Astro.url.pathname}</div>
+              <div><strong>Configured slug:</strong> {config.routeSlug}</div>
+              <div><strong>Admin path:</strong> {adminPath}</div>
+              <div><strong>Sign-in path:</strong> {signInPath}</div>
+              <div><strong>Sign-out path:</strong> {signOutPath}</div>
+              <div><strong>Notice:</strong> {notice ?? 'none'}</div>
+              <div><strong>Error detail:</strong> {errorDetail ?? 'none'}</div>
+            </div>
+          </details>
           <form class="sale-form-grid" method="post" action={signInPath}>
             <input type="hidden" name="next" value={adminPath} />
             <label class="sale-field">
